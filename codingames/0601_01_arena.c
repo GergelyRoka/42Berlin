@@ -20,9 +20,9 @@ typedef struct
 } cell;
 cell *g_table;
 int g_numberOfCells; // amount of hexagonal cells in this map
-int g_myBase;
+//int g_myBase;
 
-int **g_matrix; //matrix for dijkstra
+int **g_matrix; //matrix for dijkstra -  graph representation (adjacency matrix)
 void MY_init_matrix()
 {
 	g_matrix = (int**)malloc(g_numberOfCells * sizeof(int*));
@@ -65,9 +65,13 @@ void print_matrix()
  * 
  */
 typedef struct info_s{
+	int base[3];
 	cell beaconed[MAX];
 	int beacons;
-	int mines;
+	int mine_crystal;
+	int mine_egg;
+	int all_crystal;
+	int all_egg;
 	int my_ants;
 	int opp_ants;
 	int	crystals;
@@ -91,10 +95,10 @@ void MY_reInfo()
 		g_info.opp_ants += g_table[i].opp_ants;
 	}
 }
-void dijkstra(int **G,int n,int startnode)
+void dijkstra(int **G, int n, int startnode)
 {
-int cost[MAX][MAX],distance[MAX],pred[MAX];
-	int visited[MAX],count,mindistance,nextnode,i,j;
+	int cost[MAX][MAX], distance[MAX], pred[MAX];
+	int visited[MAX], count, mindistance, nextnode, i, j;
 	//pred[] stores the predecessor of each node
 	//count gives the number of nodes seen so far
 	//create the cost matrix
@@ -134,9 +138,8 @@ int cost[MAX][MAX],distance[MAX],pred[MAX];
 					pred[i] = nextnode;
 				}
 		count++;
-	}
-	
-	//copy 
+	}	
+	//copy //i wasn't able to handle this with pointers... so :3
 	for (int i = 0; i < n; ++i)
 	{
 		g_table[startnode].distances[i] = distance[i];
@@ -159,42 +162,127 @@ int cost[MAX][MAX],distance[MAX],pred[MAX];
 	*/
 }
 
-
-void MY_light()
+void My_light()
 {
 	for (int i = 0; i < g_numberOfCells; ++i)
-	{
+		if (g_table[i].beacon)
+			printf("BEACON %i %i;", i, g_table[i].opp_ants + 1);
+	printf("\n");
+}
+
+void MY_zero_beacon()
+{
+	for (int i = 0; i < g_numberOfCells; ++i)
 		g_table[i].beacon = 0;
-		g_info.beacons = 0;
-	}
-	while (g_info.beacons == 0 || g_info.my_ants / g_info.beacons >= 3)
+}
+
+/**
+ * @brief DEAFAULT beacons for bases
+ * 
+ */
+void MY_beacons_for_bases()
+{
+	g_table[g_info.base[0]].beacon = 1;	// beacon on for the bases
+	if (g_info.base[1])
+		g_table[g_info.base[1]].beacon = 1;
+} 
+/**
+ * @brief	1st step
+ * 			Eggs near the bases are prior for collecting.
+ */
+int MY_1st_step()
+{
+	int egg = 1;
+
+	for (int i = 0; i < 6; ++i)
 	{
-		for (int i = 0; i < g_numberOfCells; ++i)
-			if (g_table[i].beacon)
-				++g_info.beacons;
-		int close = MAX;
-		int closest;
-		for (int i = 0; i < g_numberOfCells; ++i)
+		for (int b = 0; g_info.base[b]; ++b)
 		{
-			if (g_table[i].type && g_table[i].beacon == 0 && g_table[i].resources && g_table[g_myBase].distances[i] < close)
+			fprintf(stderr, "base: %i | cell %i", b, g_table[g_info.base[b]].neighbours[i]);
+			if (g_table[g_table[g_info.base[b]].neighbours[i]].type != -1)
+				fprintf(stderr,"| type: %i | resources: %i", g_table[g_table[g_info.base[b]].neighbours[i]].type, g_table[g_table[g_info.base[b]].neighbours[i]].resources);
+			fprintf(stderr, "\n");
+			if (g_table[g_info.base[b]].neighbours[i] != -1 && g_table[g_table[g_info.base[b]].neighbours[i]].type == 1 && g_table[g_table[g_info.base[b]].neighbours[i]].resources)
 			{
-				close = 	g_table[g_myBase].distances[i];
-				closest = i;
+				g_table[g_table[g_info.base[b]].neighbours[i]].beacon = 1;
+				egg *= b + 2;
+				if (g_table[g_table[g_info.base[b]].neighbours[i]].my_ants > g_table[g_table[g_info.base[b]].neighbours[i]].resources)
+					egg *= 5; 
 			}
 		}
-		g_table[closest].beacon = 1;
-		do
-		{
-			closest = g_table[g_myBase].ways[closest];
-			g_table[closest].beacon = 1;
-		}while(closest != g_myBase);
 	}
+	if (egg % 5 == 0) //if more ants then resource, time to step 2
+		return (1);
+	return (egg);
+}
 
+
+/**
+ * @brief check fot every resourced is beaconed-e
+ * 
+ * @return int 
+ */
+int MY_every_beaconed()
+{
 	for (int i = 0; i < g_numberOfCells; ++i)
+		if (g_table[i].type && g_table[i].resources && !g_table[i].beacon)
+			return (0);
+	return (1);
+}
+
+void MY_path(int new)
+{
+	dijkstra(g_matrix, g_numberOfCells, new);
+
+	for (int di = 1; di < g_numberOfCells / 2; ++di)
 	{
-		if(g_table[i].beacon)
-			printf("BEACON %i 1;", i);
+		for (int i = 0; i < g_numberOfCells; ++i)
+		{
+			if (g_table[new].distances[i] == di)
+			{
+				if (g_table[i].beacon == 1)
+				{
+					int j;
+					j = i;
+					do
+					{
+						j = g_table[new].ways[j];
+						fprintf(stderr, "ez: %i\n", j);
+						g_table[j].beacon = 1;
+						//fprintf(stderr, "<-%d",j);
+					}while(j != new);
+					g_table[i].beacon = 1;
+					return ;
+				}
+			}
+		}
 	}
+}
+
+/**
+ * @brief prototype
+ * 			mark everything
+ */
+void MY_2nd_step_every()
+{
+
+
+		for (int di = 1; di < g_numberOfCells / 2; ++di) // g_numberOfCells / 2 .. this should be the longest way to the base;
+		{
+			for (int i = 0; i < g_numberOfCells; ++i)
+			{
+				if ((g_table[g_info.base[0]].distances[i] == di) ||
+					(g_info.base[1] && g_table[g_info.base[0]].distances[i] == di))
+					{
+						//fprintf(stderr, "dist: %i cell: %i resources: %i\n", g_table[g_info.base[0]].distances[i], i, g_table[i].resources);
+						if (g_table[i].resources)
+						{	
+							//fprintf(stderr, "hejehuj\n" );
+							MY_path(i);
+						}
+					}
+			}
+		}	
 }
 
 /**
@@ -205,19 +293,32 @@ void MY_action()
 		// Write an action using printf(). DON'T FORGET THE TRAILING \n
 		// To debug: fprintf(stderr, "Debug messages...\n");
 		// WAIT | LINE <sourceIdx> <targetIdx> <strength> | BEACON <cellIdx> <strength> | MESSAGE <text>
+	MY_zero_beacon();
 	MY_reInfo();
-	dijkstra(g_matrix,g_numberOfCells,g_myBase);
+	dijkstra(g_matrix,g_numberOfCells,g_info.base[0]);
+	if (g_info.base[1])
+		dijkstra(g_matrix,g_numberOfCells,g_info.base[1]);
 		//print_matrix();
 		//fprintf(stderr, "base: %i\n", g_myBase);
+	fprintf(stderr, "äfter dijskta\n");
 
-		//MY_light();
-		//4 0 3 9 19
-		printf("BEACON 4 6;");
-		printf("BEACON 0 1;");
-		printf("BEACON 1 1;");
-		printf("BEACON 7 1;");
-		printf("BEACON 19 1;");
-	printf("\n");
+	MY_beacons_for_bases();
+	//FIRST STEP - FIRST NEARLY EGGS
+	/*int _1st = MY_1st_step();
+	fprintf(stderr, "_1st: %i\n", _1st);
+	if ((_1st % 2 == 0 && g_info.base[1] == 0) || 
+		(_1st % 2 == 0 && _1st % 3 == 0))
+	{
+		g_table[g_info.base[0]].beacon = 1;	// beacon on for the bases
+		if (g_info.base[1])
+			g_table[g_info.base[1]].beacon = 1;
+		My_light();
+		return ;
+	}*/
+	MY_2nd_step_every();
+	//MY_light();
+	My_light();
+	//printf("WAIT\n");
 }
 
 int main()
@@ -236,7 +337,7 @@ int main()
 	{
 		int my_base_index;
 		scanf("%d", &my_base_index);
-		g_myBase = my_base_index;
+		g_info.base[i] = my_base_index;
 	}
 	for (int i = 0; i < number_of_bases; i++)
 	{
