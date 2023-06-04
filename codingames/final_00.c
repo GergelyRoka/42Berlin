@@ -74,6 +74,11 @@ void MY_print_matrix()
 	}
 }
 
+/**
+ * @brief Dijksta algorithm
+ * 
+ * @param startnode index of the cell
+ */
 void dijkstra(int startnode)
 {
 	int (*G)[MAX] = g_matrix;
@@ -143,6 +148,12 @@ void dijkstra(int startnode)
 	*/
 }
 
+/**
+ * @brief	fprintf the distances from a cell to others
+ * 			using the int distances[MAX] of type cell_t
+ * 
+ * @param cell index of the cell
+ */
 void MY_print_distance(int cell)
 {
 	for (int i = 0; i < g_size; ++i)
