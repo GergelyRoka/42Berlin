@@ -17,6 +17,7 @@ typedef struct
 	int	ways[MAX];			//ways from other cells
 	int distances[MAX];		//distances from other cells
 	int beacon;				//1: beacon on on the cell - 0: no beacon
+	int	was_beacon;			//0: if no beacon prev round, 1: was beacon in prev round
 }	cell_t;
 
 typedef struct info_s
@@ -163,6 +164,33 @@ void MY_print_distance(int cell)
 	fprintf(stderr,"\n");
 }
 
+/**
+ * @brief	turn off the beacons on the cells
+ * 			save the prev status of the beacon in was_beacon
+ */
+void MY_beacons_off()
+{
+	for (int i = 0; i < g_size; ++i)
+	{
+		g_table[i].was_beacon = g_table[i].beacon;
+		g_table[i].beacon = 0;
+	}
+}
+
+/**
+ * @brief turn on the beacons of every cells with beacon
+ * 
+ * @note: power is 1 in this version, but should be modified later, i guess.
+ * 
+ */
+void MY_light() //My_beacons_on() but with fancier name
+{
+	for (int i = 0; i < g_size; ++i)
+		if (g_table[i].beacon)
+			printf("BEACON %i %i;", i, g_table[i].beacon);
+	printf("\n");
+}
+
 int main()
 {
 	scanf("%d", &g_size); 
@@ -190,6 +218,8 @@ int main()
 	// game loop
 	while (1)
 	{
+		MY_beacons_off();
+
 		scanf("%d%d", &info.my_score, &info.opp_score);
 		for (int i = 0; i < g_size; i++)
 		{
@@ -198,6 +228,8 @@ int main()
 		// Write an action using printf(). DON'T FORGET THE TRAILING \n
 		// To debug: fprintf(stderr, "Debug messages...\n");
 		// WAIT | LINE <sourceIdx> <targetIdx> <strength> | BEACON <cellIdx> <strength> | MESSAGE <text>
+		
+		//MY_light();
 		printf("WAIT\n");
 	}
 
