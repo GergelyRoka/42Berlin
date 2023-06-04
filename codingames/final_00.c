@@ -46,7 +46,7 @@ info_t	info;	// gamestatus, infos about the gameboard
 void MY_init_matrix()
 {
 	for (int i = 0; i < g_size; ++i)
-		for (int j = 0; i < g_size; ++j)
+		for (int j = 0; j < g_size; ++j)
 			if (i == j)
 				g_matrix[i][j] = 0;
 			else
@@ -55,7 +55,7 @@ void MY_init_matrix()
 	for (int i = 0; i < g_size; ++i)
 		for (int j = 0; j < 6; ++j)
 			if (g_table[i].neighbours[j] != -1)
-				g_matrix[i][g_table[i].neighbours[j]] = 1, g_matrix[g_table[i].neighbours[j]][i] = 1;
+				g_matrix[i][g_table[i].neighbours[j]] = 1;
 }
 
 /**
@@ -93,6 +93,8 @@ int main()
 		scanf("%d", &info.opp_base[i]);
 	}
 
+	MY_init_matrix();
+	MY_print_matrix();
 	// game loop
 	while (1)
 	{
