@@ -191,6 +191,14 @@ void MY_light() //My_beacons_on() but with fancier name
 	printf("\n");
 }
 
+
+void MY_action()
+{
+	MY_beacons_off();
+
+	//MY_light();
+}
+
 int main()
 {
 	scanf("%d", &g_size); 
@@ -218,8 +226,6 @@ int main()
 	// game loop
 	while (1)
 	{
-		MY_beacons_off();
-
 		scanf("%d%d", &info.my_score, &info.opp_score);
 		for (int i = 0; i < g_size; i++)
 		{
@@ -228,7 +234,9 @@ int main()
 		// Write an action using printf(). DON'T FORGET THE TRAILING \n
 		// To debug: fprintf(stderr, "Debug messages...\n");
 		// WAIT | LINE <sourceIdx> <targetIdx> <strength> | BEACON <cellIdx> <strength> | MESSAGE <text>
-		
+
+
+		MY_action();
 		//MY_light();
 		printf("WAIT\n");
 	}
