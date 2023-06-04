@@ -8,6 +8,7 @@
 
 typedef struct
 {
+	int index;
 	int type;				// 0 for empty, 1 for eggs, 2 for crystal
 	int initial_resources;	// the initial amount of eggs/crystals on this cell
 	int neighbours[6];		// the index of the neighbouring cell for each direction
@@ -23,8 +24,8 @@ typedef struct
 typedef struct info_s
 {
 	int	game_type; // 1 -> 1 base/player | 2 -> 2 bases/player
-	int my_base[3];	// cell indexes for bases
-	int opp_base[3];
+	cell_t *my_base[2];	// cell indexes for bases
+	cell_t *opp_base[2];
 	int	my_score;
 	int opp_score;
 	cell_t beaconed[MAX];
@@ -182,8 +183,33 @@ void MY_beacons_off()
  */
 void MY_beacons_for_bases()
 {
-	g_table[info.my_base[0]].beacon = 1;
-	info.my_base[1] ? g_table[info.my_base[1]].beacon = 1 : 0;
+	info.my_base[0]->beacon = 1;
+	info.my_base[1] ? info.my_base[1]->beacon = 1 : 0;
+}
+
+/**
+ * @brief Checkfor beacons in the neighborhood of a cell
+ * 
+ * @param cell index of the cell
+ * @return int 1 if there is a beaconed neighbour, 0 if none beacon
+ */
+int MY_is_any_beacon_nearby(int cell)
+{
+	for (int i = 0; i < 6; ++i)
+		if (g_table[cell].neighbours[i] != -1
+			&& g_table[g_table[cell].neighbours[i]].beacon)
+			return (1);
+	return (0);
+}
+
+/**
+ * @brief 
+ * 
+ */
+void MY_beacons_off_for_bases()
+{
+	if (MY_is_any_beacon_nearby(info.my_base[0]) == 0)
+		g_table[1];
 }
 
 /**
@@ -217,6 +243,7 @@ int main()
 	scanf("%d", &g_size); 
 	for (int i = 0; i < g_size; i++)
 	{
+		g_table[i].index = i;
 		scanf("%d%d%d%d%d%d%d%d", &g_table[i].type, &g_table[i].initial_resources,
 			&g_table[i].neighbours[0], &g_table[i].neighbours[1], &g_table[i].neighbours[2],
 			&g_table[i].neighbours[3], &g_table[i].neighbours[4], &g_table[i].neighbours[5]);
@@ -224,18 +251,22 @@ int main()
 	scanf("%d", &info.game_type);
 	for (int i = 0; i < info.game_type; i++)
 	{
-		scanf("%d", &info.my_base[i]);
+		int index;
+		scanf("%d", &index);
+		info.my_base[i] = &g_table[index];
 	}
 	for (int i = 0; i < info.game_type; i++)
 	{
-		scanf("%d", &info.opp_base[i]);
+		int index;
+		scanf("%d", &index);
+		info.opp_base[i] = &g_table[index];
 	}
 
 	MY_init_matrix();
 	MY_print_matrix();
-	dijkstra(info.my_base[0]);
-	dijkstra(info.opp_base[0]);
-	info.game_type == 2 ? dijkstra(info.my_base[1]), dijkstra(info.opp_base[1]) : 0;
+	dijkstra(info.my_base[0]->index);
+	dijkstra(info.opp_base[0]->index);
+	info.game_type == 2 ? dijkstra(info.my_base[1]->index), dijkstra(info.opp_base[1]->index) : 0;
 	// game loop
 	while (1)
 	{
