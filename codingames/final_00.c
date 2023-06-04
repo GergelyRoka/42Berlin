@@ -178,6 +178,15 @@ void MY_beacons_off()
 }
 
 /**
+ * @brief turn on the beacons for my bases
+ */
+void MY_beacons_for_bases()
+{
+	g_table[info.my_base[0]].beacon = 1;
+	info.my_base[1] ? g_table[info.my_base[1]].beacon = 1 : 0;
+}
+
+/**
  * @brief turn on the beacons of every cells with beacon
  * 
  * @note: power is 1 in this version, but should be modified later, i guess.
@@ -191,12 +200,16 @@ void MY_light() //My_beacons_on() but with fancier name
 	printf("\n");
 }
 
-
+/**
+ * @brief my actions fot a turn
+ * 
+ */
 void MY_action()
 {
 	MY_beacons_off();
+	MY_beacons_for_bases();
 
-	//MY_light();
+	MY_light();
 }
 
 int main()
@@ -235,10 +248,7 @@ int main()
 		// To debug: fprintf(stderr, "Debug messages...\n");
 		// WAIT | LINE <sourceIdx> <targetIdx> <strength> | BEACON <cellIdx> <strength> | MESSAGE <text>
 
-
 		MY_action();
-		//MY_light();
-		printf("WAIT\n");
 	}
 
 	return 0;
