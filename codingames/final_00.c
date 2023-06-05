@@ -17,7 +17,7 @@ typedef struct
 	int opp_ants;			// the amount of opponent ants on this cell
 	int	ways[MAX];			//ways from other cells
 	int distances[MAX];		//distances from other cells
-	int beacon;				//1: beacon on on the cell - 0: no beacon
+	int beacon;				//1: beacon on on the cell - 0: no beacon - or more for prior
 	int	was_beacon;			//0: if no beacon prev round, 1: was beacon in prev round
 }	cell_t;
 
@@ -30,6 +30,7 @@ typedef struct info_s
 	cell_t	*mine_cells[MAX];
 	cell_t	*crystal_cells[MAX];
 	cell_t	*egg_cells[MAX];
+	int	win_score;		// score for win
 	int	my_score;		// my score
 	int opp_score;		// opp score
 	int beacons;		// every beacons of mine
@@ -318,6 +319,10 @@ void MY_open_mines_near_beacons()
 					g_table[i].beacon++;
 }
 
+/**
+ * @brief if there is only one crystal res, go for it!
+ * 
+ */
 void MY_last_mine_test()
 {
 	if (info.n_crystal_cells == 1)
@@ -350,17 +355,44 @@ void MY_last_mine_test()
 }
 
 /**
+ * @brief do the path from a cell to the beaconed one
+ * 
+ * @param cell index
+ */
+void MY_path(int cell)
+{
+	dijkstra(cell);
+	for (int distance = 1; distance < g_size / 2; ++distance)
+		for (int i = 0; i < g_size; ++i)
+			if (g_table[cell].distances[i] == distance && g_table[i].beacon)
+			{
+				int j;
+				j = i;
+				do
+				{
+					j = g_table[cell].ways[j];
+					if (g_table[j].beacon == 0)
+					g_table[j].beacon = 1;
+				}while(j != cell);
+				g_table[i].beacon = 1;
+				return ;
+			}
+}
+
+/**
  * @brief my actions fot a turn
  * 
  */
 void MY_action()
 {
+	//fprintf(stderr,"win_score: %i\n", info.win_score);
+	printf("MESSAGE Hello there!;");
 	MY_beacons_off();
 	MY_beacons_for_bases();
 	MY_info_refresh();
 	MY_open_mines_near_beacons();
 	MY_last_mine_test();
-	//MY_beacons_off_for_bases();
+	MY_beacons_off_for_bases();
 	MY_light();
 }
 
@@ -373,7 +405,10 @@ int main()
 		scanf("%d%d%d%d%d%d%d%d", &g_table[i].type, &g_table[i].initial_resources,
 			&g_table[i].neighbours[0], &g_table[i].neighbours[1], &g_table[i].neighbours[2],
 			&g_table[i].neighbours[3], &g_table[i].neighbours[4], &g_table[i].neighbours[5]);
+		if (g_table[i].type == 2)
+			info.win_score+=g_table[i].initial_resources;
 	}
+	info.win_score = info.win_score / 2 + 1;
 	scanf("%d", &info.game_type);
 	for (int i = 0; i < info.game_type; i++)
 	{
