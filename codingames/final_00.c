@@ -26,14 +26,18 @@ typedef struct info_s
 	int	game_type; 		// 1 -> 1 base/player | 2 -> 2 bases/player
 	cell_t *my_base[2];	// cell indexes for bases
 	cell_t *opp_base[2];// cell indexes of opp bases
+	cell_t	*res_cells[MAX];
+	cell_t	*mine_cells[MAX];
+	cell_t	*crystal_cells[MAX];
+	cell_t	*egg_cells[MAX];
 	int	my_score;		// my score
 	int opp_score;		// opp score
 	int beacons;		// every beacons of mine
 	int mines;			// every opened mine
 	int crystal_mines;	// crystal mine
 	int egg_mines;		// egg mine
-	int crystal_cells;	// number of cells of crystal resources
-	int egg_cells;		// number of cells of egg resources
+	int n_crystal_cells;	// number of cells of crystal resources
+	int n_egg_cells;		// number of cells of egg resources
 	int my_ants;		// number of my ants
 	int opp_ants;		// number of opp ants
 	int	crystals;		// all crystals resources on the board
@@ -47,6 +51,7 @@ info_t	info;	// gamestatus, infos about the gameboard
 
 /**
  * @brief Initializing the matrix, doing the graph representation for dijkstra
+ * 		the distance is 1 if the edge goes to resource, otherwise 2
  */
 void MY_init_matrix()
 {
@@ -60,7 +65,11 @@ void MY_init_matrix()
 	for (int i = 0; i < g_size; ++i)
 		for (int j = 0; j < 6; ++j)
 			if (g_table[i].neighbours[j] != -1)
-				g_matrix[i][g_table[i].neighbours[j]] = 1;
+			{
+				g_matrix[i][g_table[i].neighbours[j]] = 2;
+				if (g_table[g_table[i].neighbours[j]].type)
+					g_matrix[i][g_table[i].neighbours[j]] = 1;
+			}
 }
 
 /**
@@ -229,6 +238,7 @@ void MY_light() //My_beacons_on() but with fancier name
 			printf("BEACON %i %i;", i, g_table[i].beacon);
 	printf("\n");
 }
+
 /**
  * @brief refresh the info, gamestatus
  */
@@ -241,10 +251,15 @@ void MY_info_refresh()
 	info.mines = 0;
 	info.crystal_mines = 0;
 	info.egg_mines = 0;
-	info.crystal_cells = 0;
-	info.egg_cells = 0;
+	info.n_crystal_cells = 0;
+	info.n_egg_cells = 0;
 	info.crystals = 0;
 	info.eggs = 0;
+
+	int	ri = 0;
+	int mi = 0;
+	int ci = 0;
+	int ei = 0;
 
 	for (int i = 0; i < g_size; ++i)
 	{
@@ -258,24 +273,79 @@ void MY_info_refresh()
 		
 		if (g_table[i].type == 1)
 		{
-			info.egg_cells++;
+			info.n_egg_cells++;
 			info.eggs += g_table[i].resources;
+			info.res_cells[ri++] = &g_table[i];
+			info.egg_cells[ei++] = &g_table[i];
 			if (g_table[i].beacon)
 			{
 				info.mines++;
 				info.egg_mines++;
+				info.mine_cells[mi++] = &g_table[i];
 			}
 		}
 		else if (g_table[i].type == 2)
 		{
-			info.crystal_cells++;
+			info.n_crystal_cells++;
 			info.crystals += g_table[i].resources;
+			info.res_cells[ri++] = &g_table[i];
+			info.crystal_cells[ci++] = &g_table[i];
 			if (g_table[i].beacon)
 			{
 				info.mines++;
 				info.crystal_mines++;
+				info.mine_cells[mi++] = &g_table[i];
 			}
 		}
+	}
+	info.mine_cells[mi] = NULL;
+	info.res_cells[ri] = NULL;
+	info.egg_cells[ei] = NULL;
+	info.crystal_cells[ci] = NULL;
+
+	MY_init_matrix(); //refresh the matrix too
+}
+
+/**
+ * @brief open mines near a path
+ */
+void MY_open_mines_near_beacons()
+{
+	for (int i = 0; i < g_size; ++i)
+		for (int j = 0; j < 6; ++j)
+			if (g_table[i].resources && g_table[g_table[i].neighbours[j]].beacon)
+				if (g_table[i].beacon == 0)
+					g_table[i].beacon++;
+}
+
+void MY_last_mine_test()
+{
+	if (info.n_crystal_cells == 1)
+	{
+		MY_beacons_off();
+		MY_beacons_for_bases();
+		dijkstra(info.crystal_cells[0]->index);
+		info.crystal_cells[0]->beacon++;
+		fprintf(stderr,"charge!!\n");
+		for (int distance = 1; distance < g_size / 2; ++distance)
+			for (int i = 0; i < g_size; ++i)
+				if (info.crystal_cells[0]->distances[i] == distance)
+					if (g_table[i].beacon == 1)
+					{
+						int j;
+						j = i;
+						do
+						{
+							j = info.crystal_cells[0]->ways[j];
+							//fprintf(stderr, "ez: %i\n", j);
+							g_table[j].beacon = 1;
+							//fprintf(stderr, "<-%d",j);
+						}while(j != info.crystal_cells[0]->index);
+						info.crystal_cells[0]->beacon++; //prior beacon for the mine
+						MY_open_mines_near_beacons();
+						
+						return ;
+					}
 	}
 }
 
@@ -287,8 +357,10 @@ void MY_action()
 {
 	MY_beacons_off();
 	MY_beacons_for_bases();
-
-	MY_beacons_off_for_bases();
+	MY_info_refresh();
+	MY_open_mines_near_beacons();
+	MY_last_mine_test();
+	//MY_beacons_off_for_bases();
 	MY_light();
 }
 
