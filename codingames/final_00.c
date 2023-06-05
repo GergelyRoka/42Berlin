@@ -356,7 +356,7 @@ void MY_light() //My_beacons_on() but with fancier name
 {
 	for (int i = 0; i < g_size; ++i)
 		if (g_table[i].beacon)
-			printf("BEACON %i %i;", i, g_table[i].beacon);
+			printf("BEACON %i %i;", i, 1);
 	printf("\n");
 }
 
@@ -432,11 +432,19 @@ void MY_info_refresh()
  */
 void MY_open_mines_near_beacons()
 {
-	for (int i = 0; i < g_size; ++i)
-		for (int j = 0; j < 6; ++j)
-			if (g_table[i].resources && g_table[g_table[i].neighbours[j]].beacon)
-				if (g_table[i].beacon == 0)
-					g_table[i].beacon++;
+	bool new_opened = true;
+	while (new_opened)
+	{
+		new_opened = false;
+		for (int i = 0; i < g_size; ++i)
+			for (int j = 0; j < 6; ++j)
+				if (g_table[i].resources && g_table[g_table[i].neighbours[j]].beacon)
+					if (g_table[i].beacon == 0)
+					{
+						g_table[i].beacon++;
+						new_opened = true;
+					}
+	}
 }
 
 /**
@@ -499,29 +507,146 @@ void MY_path(int cell)
 			}
 }
 
+/**
+ * @brief do the path from a cell to the beaconed one
+ * 
+ * @param cell index
+ */
+void MY_real_path(int cell)
+{
+	real_dijkstra(cell);
+	for (int distance = 1; distance < g_size / 2; ++distance)
+		for (int i = 0; i < g_size; ++i)
+			if (g_table[cell].real_distances[i] == distance && g_table[i].beacon)
+			{
+				int j;
+				j = i;
+				do
+				{
+					j = g_table[cell].real_ways[j];
+					if (g_table[j].beacon == 0)
+						g_table[j].beacon = 1;
+				}while(j != cell);
+				if (g_table[i].beacon == 0)
+						g_table[i].beacon = 1;
+				g_table[cell].beacon++;
+				return ;
+			}
+}
+
+void MY_after_border()
+{
+	MY_info_refresh();
+	if (info.crystal_mines == 0)
+	{
+		int i = 0;
+		while (info.crystal_cells[i])
+		{
+			MY_path(info.crystal_cells[i]->index);
+			++i;
+		}
+	}
+	MY_open_mines_near_beacons();
+}
+
 void MY_border_farm()
 {
 	// calculate the half distance between bases
 	int dis_1 = 0;
 	int dis_2 = 0;
 
+	MY_info_refresh();
 	if (info.my_base[1])
 	{
-		dis_1 = info.my_base[0]->distances[info.opp_base[0]->index]
-			< info.my_base[0]->distances[info.opp_base[1]->index]
-			? info.my_base[0]->distances[info.opp_base[0]->index] / 2 + 1
-			: info.my_base[0]->distances[info.opp_base[1]->index] / 2 + 1;
-		dis_2 = info.my_base[1]->distances[info.opp_base[0]->index]
-			< info.my_base[1]->distances[info.opp_base[1]->index]
-			? info.my_base[1]->distances[info.opp_base[0]->index] / 2 + 1
-			: info.my_base[1]->distances[info.opp_base[1]->index] / 2 + 1;
+		dis_1 = info.my_base[0]->real_distances[info.opp_base[0]->index]
+			< info.my_base[0]->real_distances[info.opp_base[1]->index]
+			? info.my_base[0]->real_distances[info.opp_base[0]->index] / 2 + 1
+			: info.my_base[0]->real_distances[info.opp_base[1]->index] / 2 + 1;
+		dis_2 = info.my_base[1]->real_distances[info.opp_base[0]->index]
+			< info.my_base[1]->real_distances[info.opp_base[1]->index]
+			? info.my_base[1]->real_distances[info.opp_base[0]->index] / 2 + 1
+			: info.my_base[1]->real_distances[info.opp_base[1]->index] / 2 + 1;
 	}
 	else
-		dis_1 = info.my_base[0]->distances[info.opp_base[0]->index];
-
-	fprintf(stderr,"distance: %i\n", dis_1);
-	MY_print_distance(info.my_base[0]->index);
+		dis_1 = info.my_base[0]->real_distances[info.opp_base[0]->index] / 2 + 1;
+	fprintf(stderr,"dis %i\n", dis_1);
+	for (int dis = dis_1 + 1; dis >= dis_1; --dis)
+		for (int i = 0; i < g_size; ++i)
+			if (info.my_base[0]->real_distances[i] == dis
+				&& g_table[i].resources)
+					MY_real_path(i);
+	for (int dis = dis_2 + 1; dis >= dis_2; --dis)
+		for (int i = 0; i < g_size && info.my_base[1]; ++i)
+			if (info.my_base[1]->real_distances[i] == dis_2
+				&& g_table[i].resources)
+					MY_real_path(i);
+	MY_open_mines_near_beacons();
+	MY_info_refresh();
 }
+
+/**
+ * @brief focus on eggs
+ * 
+ */
+void MY_huge_crystals()
+{
+	MY_info_refresh();
+	if (info.win_score >= 1000
+		&& info.eggs && info.my_ants < info.eggs + info.opp_ants)
+	{
+		MY_beacons_off();
+		MY_beacons_for_bases();
+			
+		int dis_1 = 0;
+		int dis_2 = 0;
+
+		MY_info_refresh();
+		if (info.my_base[1])
+		{
+			dis_1 = info.my_base[0]->real_distances[info.opp_base[0]->index]
+				< info.my_base[0]->real_distances[info.opp_base[1]->index]
+				? info.my_base[0]->real_distances[info.opp_base[0]->index] / 2 + 1
+				: info.my_base[0]->real_distances[info.opp_base[1]->index] / 2 + 1;
+			dis_2 = info.my_base[1]->real_distances[info.opp_base[0]->index]
+				< info.my_base[1]->real_distances[info.opp_base[1]->index]
+				? info.my_base[1]->real_distances[info.opp_base[0]->index] / 2 + 1
+				: info.my_base[1]->real_distances[info.opp_base[1]->index] / 2 + 1;
+		}
+		else
+			dis_1 = info.my_base[0]->real_distances[info.opp_base[0]->index] / 2 + 1;
+		
+		for (int dis = dis_1 + 1; dis >= 1; --dis)
+			for (int i = 0; i < g_size; ++i)
+				if (info.my_base[0]->real_distances[i] == dis
+					&& g_table[i].resources && g_table[i].type == 1 )
+						MY_real_path(i);
+		for (int dis = dis_2 + 1; dis >= 1; --dis)
+			for (int i = 0; i < g_size && info.my_base[1]; ++i)
+				if (info.my_base[1]->real_distances[i] == dis_2
+					&& g_table[i].resources && g_table[i].type == 1)
+						MY_real_path(i);
+	}
+		MY_info_refresh();
+}
+
+void MY_everything()
+{
+	MY_info_refresh();
+	MY_beacons_for_bases();
+	if(info.mines == 0)
+	{
+		for (int dis = 1; dis < g_size /2; ++dis)
+			for (int i = 0; i < g_size; ++i)
+			{
+				MY_open_mines_near_beacons();
+				if (info.my_base[0]->distances[i] == dis
+				|| (info.my_base[1] && info.my_base[1] -> distances[i] == dis))
+					if (g_table[i].resources)
+						MY_path(i);
+			}
+	}
+}
+
 
 /**
  * @brief my actions fot a turn
@@ -534,9 +659,13 @@ void MY_action()
 	MY_beacons_off();
 	MY_beacons_for_bases();
 	MY_info_refresh();
-	MY_open_mines_near_beacons();
+	//MY_open_mines_near_beacons();
 	//1
 	MY_border_farm();
+	MY_after_border();
+	MY_huge_crystals();
+
+	
 
 	MY_last_mine_test();
 	MY_beacons_off_for_bases();
