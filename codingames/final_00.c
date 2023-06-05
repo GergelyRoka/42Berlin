@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #define INFINITY 9999
-#define MAX 99 //max number of cells
+#define MAX 110 //max number of cells
 
 typedef struct
 {
@@ -32,6 +32,8 @@ typedef struct info_s
 	cell_t	*mine_cells[MAX];
 	cell_t	*crystal_cells[MAX];
 	cell_t	*egg_cells[MAX];
+	int	half_dist[2];
+	int initial_eggs;	// eggs at start
 	int	win_score;		// score for win
 	int	my_score;		// my score
 	int opp_score;		// opp score
@@ -59,21 +61,25 @@ info_t	info;	// gamestatus, infos about the gameboard
  */
 void MY_init_matrix()
 {
+	//fprintf(stderr, "MY_init_matrix()\n");
 	for (int i = 0; i < g_size; ++i)
 		for (int j = 0; j < g_size; ++j)
 			if (i == j)
 				g_matrix[i][j] = 0;
 			else
 				g_matrix[i][j] = INFINITY;
-
+	//fprintf(stderr, "MY_init_matrix() halfdone!\n");
 	for (int i = 0; i < g_size; ++i)
 		for (int j = 0; j < 6; ++j)
 			if (g_table[i].neighbours[j] != -1)
 			{
+				if (i > 52)
+				//fprintf(stderr, "i: %i - nei: %i\n", i , g_table[i].neighbours[j]);
 				g_matrix[i][g_table[i].neighbours[j]] = 2;
 				if (g_table[g_table[i].neighbours[j]].type)
 					g_matrix[i][g_table[i].neighbours[j]] = 1;
 			}
+	//fprintf(stderr, "MY_init_matrix() done!\n");
 }
 
 /**
@@ -267,6 +273,7 @@ void real_dijkstra(int startnode)
  */
 void MY_first_dijkstras()
 {
+	//fprintf(stderr, "before firsty dijsktas\n");
 	MY_init_matrix();
 	MY_init_real_matrix();
 	MY_print_matrix();
@@ -274,6 +281,8 @@ void MY_first_dijkstras()
 	real_dijkstra(info.my_base[0]->index);
 	dijkstra(info.opp_base[0]->index);
 	real_dijkstra(info.opp_base[0]->index);
+	//fprintf(stderr, "first base dijsktas done\n");
+	
 	if (info.game_type == 2)
 	{
 		dijkstra(info.my_base[1]->index);
@@ -281,6 +290,8 @@ void MY_first_dijkstras()
 		dijkstra(info.opp_base[1]->index);
 		real_dijkstra(info.opp_base[1]->index);
 	}
+	
+	//fprintf(stderr, "after firsty dijsktas\n");
 }
 
 /**
@@ -423,6 +434,20 @@ void MY_info_refresh()
 	info.res_cells[ri] = NULL;
 	info.egg_cells[ei] = NULL;
 	info.crystal_cells[ci] = NULL;
+
+	if (info.my_base[1])
+	{
+		info.half_dist[0] = info.my_base[0]->real_distances[info.opp_base[0]->index]
+		< info.my_base[0]->real_distances[info.opp_base[1]->index]
+				? info.my_base[0]->real_distances[info.opp_base[0]->index] / 2 + 1
+				: info.my_base[0]->real_distances[info.opp_base[1]->index] / 2 + 1;
+		info.half_dist[1] = info.my_base[1]->real_distances[info.opp_base[0]->index]
+				< info.my_base[1]->real_distances[info.opp_base[1]->index]
+				? info.my_base[1]->real_distances[info.opp_base[0]->index] / 2 + 1
+				: info.my_base[1]->real_distances[info.opp_base[1]->index] / 2 + 1;
+	}
+	else
+		info.half_dist[0] = info.half_dist[0] = info.my_base[0]->real_distances[info.opp_base[0]->index] / 2 + 1;
 
 	MY_init_matrix(); //refresh the matrix too
 }
@@ -647,6 +672,152 @@ void MY_everything()
 	}
 }
 
+/**
+ * @brief harvesting eggs near the base
+ * 
+ * @return true 
+ * @return false 
+ */
+bool QQ_egg_base()
+{
+	bool harvest_1 = false;
+	bool harvest_2 = false;
+
+	if (info.my_base[1] == NULL)
+		harvest_2 = true;
+	for (int dis = 1; dis <= 2; dis++)
+		for (int i = 0; i < g_size; i++)
+		{
+			if (info.my_base[0]->distances[i] == dis && g_table[i].type == 1)
+			{
+				harvest_1 = true;
+				MY_path(i);
+			}
+			if (info.my_base[1] &&info.my_base[1]->distances[i] == dis && g_table[i].type == 1)
+			{
+				harvest_2 = true;
+				MY_path(i);
+			}
+		}
+	MY_open_mines_near_beacons();
+	return (harvest_1 && harvest_2);
+}
+
+/**
+ * @brief farm 25% of all eggs on my board
+ * 
+ * @return true 
+ * @return false 
+ */
+bool QQ_egg_hunt()
+{
+	bool harvest_1 = false;
+	bool harvest_2 = false;
+
+	if (info.my_base[1] == NULL)
+		harvest_2 = true;
+	for (int dist = 1; dist <= info.half_dist[0] + 1; ++dist)
+		for(int i = 0; i < g_size; ++i)
+			if (info.my_base[0]->real_distances[i] == dist && g_table[i].type == 1)
+			{
+				MY_path(i);
+				harvest_1 = true;
+			}
+	for (int dist = 1; info.my_base[1] && dist <= info.half_dist[0] + 1; ++dist)
+		for(int i = 0; i < g_size; ++i)
+			if (info.my_base[1]->real_distances[i] == dist && g_table[i].type == 1)
+			{
+				MY_path(i);
+				harvest_2 = true;
+			}
+	//MY_open_mines_near_beacons();
+	if (info.initial_eggs / 4 <= info.my_ants)
+		return (false);
+	MY_open_mines_near_beacons();
+	return (harvest_1 && harvest_2);
+}
+
+bool QQ_farm_my_board()
+{
+	MY_info_refresh();
+	int i = 0;
+	for (int dist = 1; dist <= info.half_dist[0] + 1; ++dist)
+		for(int i = 0; i < g_size; ++i)
+		{
+			if (info.my_base[0]->real_distances[i] == dist && g_table[i].type > 0)
+			{
+				MY_path(i);
+			}
+		}
+	for (int dist = 1; info.my_base[1] && dist <= info.half_dist[0] + 1; ++dist)
+		for(int i = 0; i < g_size; ++i)
+			if (info.my_base[1]->real_distances[i] == dist && g_table[i].type > 0)
+			{
+				MY_path(i);
+			}
+	MY_open_mines_near_beacons();
+	return true;
+}
+
+bool MY_are_we_need_more_mine()
+{
+	//return true;
+	int sum = 0;
+	int i = 0;
+	while(info.mine_cells[i])
+	{
+		sum += info.mine_cells[i]->type == 2 ? info.mine_cells[i]->resources : 0;
+		++i;
+	}
+	if (info.win_score < info.my_score + sum)
+		return (false);
+	return (true);
+}
+
+bool QQ_farm_3rd_board()
+{
+	
+	MY_info_refresh();
+	if (MY_are_we_need_more_mine() && info.crystal_mines < info.n_crystal_cells / 2)
+	{
+		int i = 0;
+		for (int dist = 1; dist <= info.half_dist[0] * 1.5 + 1; ++dist)
+			for(int i = 0; i < g_size; ++i)
+			{
+				if (info.my_base[0]->real_distances[i] == dist && g_table[i].type > 0)
+			{
+				MY_path(i);
+			}
+		}
+	for (int dist = 1; info.my_base[1] && dist <= info.half_dist[0] * 1.5 + 1; ++dist)
+		for(int i = 0; i < g_size; ++i)
+			if (info.my_base[1]->real_distances[i] == dist && g_table[i].type > 0)
+			{
+				MY_path(i);
+			}
+	MY_open_mines_near_beacons();
+	fprintf(stderr,"RULE: QQ_farm_3rd_board()\n");
+	return true;
+	}
+
+}
+
+bool QQ_farm_all()
+{
+	MY_info_refresh();
+	if (MY_are_we_need_more_mine() && info.crystal_mines < info.n_crystal_cells / 2)
+	{
+		fprintf(stderr,"RULE: QQ_farm_all()\n");
+		for (int dist = 0; dist < g_size / 2; ++dist)
+			for (int i = 0; i < g_size; ++i)
+			{
+				if (info.my_base[0]->distances[i] == dist && g_table[i].type)
+					MY_path(i);
+				if (info.my_base[1] && info.my_base[1]->distances[i] == dist && g_table[i].type)
+					MY_path(i);
+			}
+	}
+}
 
 /**
  * @brief my actions fot a turn
@@ -661,11 +832,26 @@ void MY_action()
 	MY_info_refresh();
 	//MY_open_mines_near_beacons();
 	//1
-	MY_border_farm();
-	MY_after_border();
-	MY_huge_crystals();
+	/*if (QQ_egg_base())
+	{
+		fprintf(stderr, "RULE: QQ_egg_base()\n");
+		MY_light();
+		return ;
+	}*/
+	if (QQ_egg_hunt())
+	{
+		fprintf(stderr, "RULE: QQ_egg_hunt()\n");
+		MY_light();
+		return ;
+	}
 
-	
+	//MY_border_farm();
+	//MY_after_border();
+	//MY_huge_crystals();
+
+	QQ_farm_my_board();
+	QQ_farm_3rd_board();
+	QQ_farm_all();
 
 	MY_last_mine_test();
 	MY_beacons_off_for_bases();
@@ -683,6 +869,8 @@ int main()
 			&g_table[i].neighbours[3], &g_table[i].neighbours[4], &g_table[i].neighbours[5]);
 		if (g_table[i].type == 2)
 			info.win_score+=g_table[i].initial_resources;
+		if (g_table[i].type == 1)
+			info.initial_eggs+=g_table[i].initial_resources;
 	}
 	info.win_score = info.win_score / 2 + 1;
 	scanf("%d", &info.game_type);
