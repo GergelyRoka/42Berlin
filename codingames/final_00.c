@@ -11,6 +11,7 @@
  * Global rank		| 636th	/ 5,288
  * Silver league 	| 142th	/ 1,033
  * Team rank		| 32th	/ 218	|| School : 42 Berlin
+ * Language C		| 11th	/ 150
  */
 
 #include <stdlib.h>
