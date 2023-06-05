@@ -23,18 +23,21 @@ typedef struct
 
 typedef struct info_s
 {
-	int	game_type; // 1 -> 1 base/player | 2 -> 2 bases/player
+	int	game_type; 		// 1 -> 1 base/player | 2 -> 2 bases/player
 	cell_t *my_base[2];	// cell indexes for bases
-	cell_t *opp_base[2];
-	int	my_score;
-	int opp_score;
-	cell_t beaconed[MAX];
-	int beacons;
-	int mines;
-	int my_ants;
-	int opp_ants;
-	int	crystals;
-	int	eggs;
+	cell_t *opp_base[2];// cell indexes of opp bases
+	int	my_score;		// my score
+	int opp_score;		// opp score
+	int beacons;		// every beacons of mine
+	int mines;			// every opened mine
+	int crystal_mines;	// crystal mine
+	int egg_mines;		// egg mine
+	int crystal_cells;	// number of cells of crystal resources
+	int egg_cells;		// number of cells of egg resources
+	int my_ants;		// number of my ants
+	int opp_ants;		// number of opp ants
+	int	crystals;		// all crystals resources on the board
+	int	eggs;			// amount of eggs on the board
 } info_t;
 
 int		g_size; // amount of hexagonal cells in this map
@@ -203,13 +206,14 @@ int MY_is_any_beacon_nearby(int cell)
 }
 
 /**
- * @brief 
- * 
+ * @brief beacon off on a base if there is no connection with it
  */
 void MY_beacons_off_for_bases()
 {
-	if (MY_is_any_beacon_nearby(info.my_base[0]) == 0)
-		g_table[1];
+	if (MY_is_any_beacon_nearby(info.my_base[0]->index) == 0)
+		info.my_base[0]->beacon = 0;
+	if (info.my_base[1] && MY_is_any_beacon_nearby(info.my_base[1]->index) == 0)
+		info.my_base[1]->beacon = 0;
 }
 
 /**
@@ -225,6 +229,55 @@ void MY_light() //My_beacons_on() but with fancier name
 			printf("BEACON %i %i;", i, g_table[i].beacon);
 	printf("\n");
 }
+/**
+ * @brief refresh the info, gamestatus
+ */
+MY_info_refresh()
+{
+	info.beacons = 0;
+	info.mines = 0;
+	info.my_ants = 0;
+	info.opp_ants = 0;
+	info.mines = 0;
+	info.crystal_mines = 0;
+	info.egg_mines = 0;
+	info.crystal_cells = 0;
+	info.egg_cells = 0;
+	info.crystals = 0;
+	info.eggs = 0;
+
+	for (int i = 0; i < g_size; ++i)
+	{
+		// if no more resource on the cell, change the type to zero
+		if (g_table[i].resources == 0)
+			g_table[i].type = 0;
+
+		info.beacons += g_table[i].beacon;
+		info.my_ants += g_table[i].my_ants;
+		info.opp_ants += g_table[i].opp_ants;
+		
+		if (g_table[i].type == 1)
+		{
+			info.egg_cells++;
+			info.eggs += g_table[i].resources;
+			if (g_table[i].beacon)
+			{
+				info.mines++;
+				info.egg_mines++;
+			}
+		}
+		else if (g_table[i].type == 2)
+		{
+			info.crystal_cells++;
+			info.crystals += g_table[i].resources;
+			if (g_table[i].beacon)
+			{
+				info.mines++;
+				info.crystal_mines++;
+			}
+		}
+	}
+}
 
 /**
  * @brief my actions fot a turn
@@ -235,6 +288,7 @@ void MY_action()
 	MY_beacons_off();
 	MY_beacons_for_bases();
 
+	MY_beacons_off_for_bases();
 	MY_light();
 }
 
