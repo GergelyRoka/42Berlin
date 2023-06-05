@@ -232,7 +232,7 @@ void MY_light() //My_beacons_on() but with fancier name
 /**
  * @brief refresh the info, gamestatus
  */
-MY_info_refresh()
+void MY_info_refresh()
 {
 	info.beacons = 0;
 	info.mines = 0;
