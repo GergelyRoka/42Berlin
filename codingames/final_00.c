@@ -1,3 +1,18 @@
+/**
+ * @file final_00.c
+ * @author Gergely Roka | R.O.K.A. | groka@student.42berlin.de
+ * @brief 
+ * @version 0.1
+ * @date 2023-06-05
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ * https://www.codingame.com/contests/spring-challenge-2023
+ * Global rank		| 636th	/ 5,288
+ * Silver league 	| 142th	/ 1,033
+ * Team rank		| 32th	/ 218	|| School : 42 Berlin
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -61,25 +76,20 @@ info_t	info;	// gamestatus, infos about the gameboard
  */
 void MY_init_matrix()
 {
-	//fprintf(stderr, "MY_init_matrix()\n");
 	for (int i = 0; i < g_size; ++i)
 		for (int j = 0; j < g_size; ++j)
 			if (i == j)
 				g_matrix[i][j] = 0;
 			else
 				g_matrix[i][j] = INFINITY;
-	//fprintf(stderr, "MY_init_matrix() halfdone!\n");
 	for (int i = 0; i < g_size; ++i)
 		for (int j = 0; j < 6; ++j)
 			if (g_table[i].neighbours[j] != -1)
 			{
-				if (i > 52)
-				//fprintf(stderr, "i: %i - nei: %i\n", i , g_table[i].neighbours[j]);
 				g_matrix[i][g_table[i].neighbours[j]] = 2;
 				if (g_table[g_table[i].neighbours[j]].type)
 					g_matrix[i][g_table[i].neighbours[j]] = 1;
 			}
-	//fprintf(stderr, "MY_init_matrix() done!\n");
 }
 
 /**
@@ -273,7 +283,6 @@ void real_dijkstra(int startnode)
  */
 void MY_first_dijkstras()
 {
-	//fprintf(stderr, "before firsty dijsktas\n");
 	MY_init_matrix();
 	MY_init_real_matrix();
 	MY_print_matrix();
@@ -281,17 +290,14 @@ void MY_first_dijkstras()
 	real_dijkstra(info.my_base[0]->index);
 	dijkstra(info.opp_base[0]->index);
 	real_dijkstra(info.opp_base[0]->index);
-	//fprintf(stderr, "first base dijsktas done\n");
 	
-	if (info.game_type == 2)
+	if (info.my_base[1])
 	{
 		dijkstra(info.my_base[1]->index);
 		real_dijkstra(info.my_base[1]->index);
 		dijkstra(info.opp_base[1]->index);
 		real_dijkstra(info.opp_base[1]->index);
 	}
-	
-	//fprintf(stderr, "after firsty dijsktas\n");
 }
 
 /**
@@ -769,7 +775,8 @@ bool MY_are_we_need_more_mine()
 		sum += info.mine_cells[i]->type == 2 ? info.mine_cells[i]->resources : 0;
 		++i;
 	}
-	if (info.win_score < info.my_score + sum)
+	fprintf(stderr, "score: %i - sum: %i - win: %i\n", info.my_score, sum, info.win_score);
+	if (info.win_score <= info.my_score + sum)
 		return (false);
 	return (true);
 }
@@ -872,7 +879,7 @@ int main()
 		if (g_table[i].type == 1)
 			info.initial_eggs+=g_table[i].initial_resources;
 	}
-	info.win_score = info.win_score / 2 + 1;
+	info.win_score = info.win_score / 2;
 	scanf("%d", &info.game_type);
 	for (int i = 0; i < info.game_type; i++)
 	{
