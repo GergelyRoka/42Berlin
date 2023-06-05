@@ -15,8 +15,10 @@ typedef struct
 	int resources;			// the current amount of eggs/crystals on this cell
 	int my_ants;			// the amount of your ants on this cell
 	int opp_ants;			// the amount of opponent ants on this cell
-	int	ways[MAX];			//ways from other cells
-	int distances[MAX];		//distances from other cells
+	int	ways[MAX];			// ways from other cells
+	int distances[MAX];		// distances from other cells
+	int real_ways[MAX];		// real
+	int real_distances[MAX];	// real
 	int beacon;				//1: beacon on on the cell - 0: no beacon - or more for prior
 	int	was_beacon;			//0: if no beacon prev round, 1: was beacon in prev round
 }	cell_t;
@@ -48,6 +50,7 @@ typedef struct info_s
 int		g_size; // amount of hexagonal cells in this map
 cell_t	g_table[MAX]; // basicly the gameboard, array of cells
 int		g_matrix[MAX][MAX]; //matrix for Dijkstra algorithm - graph representation
+int		g_real_matrix[MAX][MAX];
 info_t	info;	// gamestatus, infos about the gameboard
 
 /**
@@ -70,6 +73,27 @@ void MY_init_matrix()
 				g_matrix[i][g_table[i].neighbours[j]] = 2;
 				if (g_table[g_table[i].neighbours[j]].type)
 					g_matrix[i][g_table[i].neighbours[j]] = 1;
+			}
+}
+
+/**
+ * @brief Initializing the real matrix, doing the graph representation for dijkstra
+ * 		the distance is 1 
+ */
+void MY_init_real_matrix()
+{
+	for (int i = 0; i < g_size; ++i)
+		for (int j = 0; j < g_size; ++j)
+			if (i == j)
+				g_real_matrix[i][j] = 0;
+			else
+				g_real_matrix[i][j] = INFINITY;
+
+	for (int i = 0; i < g_size; ++i)
+		for (int j = 0; j < 6; ++j)
+			if (g_table[i].neighbours[j] != -1)
+			{
+				g_real_matrix[i][g_table[i].neighbours[j]] = 1;
 			}
 }
 
@@ -161,6 +185,102 @@ void dijkstra(int startnode)
 			}while(j!=startnode);
 		}
 	*/
+}
+
+/**
+ * @brief Dijksta algorithm
+ * 
+ * @param startnode index of the cell
+ */
+void real_dijkstra(int startnode)
+{
+	int (*G)[MAX] = g_real_matrix;
+	int n = g_size;
+	int cost[MAX][MAX], distance[MAX], pred[MAX];
+	int visited[MAX], count, mindistance, nextnode, i, j;
+	//pred[] stores the predecessor of each node
+	//count gives the number of nodes seen so far
+	//create the cost matrix
+	for(i = 0; i < n; i++)
+		for(j = 0; j < n; j++)
+			if(G[i][j] == 0)
+				cost[i][j] = INFINITY;
+			else
+				cost[i][j] = G[i][j];
+	//initialize pred[],distance[] and visited[]
+	for(i = 0; i < n; i++)
+	{
+		distance[i] = cost[startnode][i];
+		pred[i] = startnode;
+		visited[i] = 0;
+	}
+	distance[startnode] = 0;
+	visited[startnode] = 1;
+	count = 1;
+	while(count < n - 1)
+	{
+		mindistance = INFINITY;
+		//nextnode gives the node at minimum distance
+		for(i = 0; i < n; i++)
+			if(distance[i] < mindistance && !visited[i])
+			{
+				mindistance = distance[i];
+				nextnode = i;
+			}
+		//check if a better path exists through nextnode
+		visited[nextnode] = 1;
+		for(i = 0; i < n; i++)
+			if(!visited[i])
+				if(mindistance + cost[nextnode][i] < distance[i])
+				{
+					distance[i] = mindistance + cost[nextnode][i];
+					pred[i] = nextnode;
+				}
+		count++;
+	}	
+	//copy //i wasn't able to handle this with pointers... so :3
+	for (int i = 0; i < n; ++i)
+	{
+		g_table[startnode].real_distances[i] = distance[i];
+		g_table[startnode].real_ways[i] = pred[i];
+	}
+	/*
+	//print the path and distance of each node
+	for(i = 0; i < n; i++)
+		if(i != startnode)
+		{
+			fprintf(stderr,"\nDistance of node%d=%d",i, g_table[startnode].distances[i]);
+			fprintf(stderr,"\nPath=%d",i);
+			j=i;
+			do
+			{
+				j=g_table[startnode].ways[j];
+				fprintf(stderr, "<-%d",j);
+			}while(j!=startnode);
+		}
+	*/
+}
+
+/**
+ * @brief dijkstras for bases 
+ * 
+ */
+void MY_first_dijkstras()
+{
+	MY_init_matrix();
+	MY_init_real_matrix();
+	MY_print_matrix();
+	dijkstra(info.my_base[0]->index);
+	real_dijkstra(info.my_base[0]->index);
+	dijkstra(info.opp_base[0]->index);
+	real_dijkstra(info.opp_base[0]->index);
+	if (info.game_type == 2)
+	{
+		dijkstra(info.my_base[1]->index);
+		real_dijkstra(info.my_base[1]->index);
+		dijkstra(info.opp_base[1]->index);
+		real_dijkstra(info.opp_base[1]->index);
+	}
 }
 
 /**
@@ -379,6 +499,30 @@ void MY_path(int cell)
 			}
 }
 
+void MY_border_farm()
+{
+	// calculate the half distance between bases
+	int dis_1 = 0;
+	int dis_2 = 0;
+
+	if (info.my_base[1])
+	{
+		dis_1 = info.my_base[0]->distances[info.opp_base[0]->index]
+			< info.my_base[0]->distances[info.opp_base[1]->index]
+			? info.my_base[0]->distances[info.opp_base[0]->index] / 2 + 1
+			: info.my_base[0]->distances[info.opp_base[1]->index] / 2 + 1;
+		dis_2 = info.my_base[1]->distances[info.opp_base[0]->index]
+			< info.my_base[1]->distances[info.opp_base[1]->index]
+			? info.my_base[1]->distances[info.opp_base[0]->index] / 2 + 1
+			: info.my_base[1]->distances[info.opp_base[1]->index] / 2 + 1;
+	}
+	else
+		dis_1 = info.my_base[0]->distances[info.opp_base[0]->index];
+
+	fprintf(stderr,"distance: %i\n", dis_1);
+	MY_print_distance(info.my_base[0]->index);
+}
+
 /**
  * @brief my actions fot a turn
  * 
@@ -391,6 +535,9 @@ void MY_action()
 	MY_beacons_for_bases();
 	MY_info_refresh();
 	MY_open_mines_near_beacons();
+	//1
+	MY_border_farm();
+
 	MY_last_mine_test();
 	MY_beacons_off_for_bases();
 	MY_light();
@@ -423,11 +570,7 @@ int main()
 		info.opp_base[i] = &g_table[index];
 	}
 
-	MY_init_matrix();
-	MY_print_matrix();
-	dijkstra(info.my_base[0]->index);
-	dijkstra(info.opp_base[0]->index);
-	info.game_type == 2 ? dijkstra(info.my_base[1]->index), dijkstra(info.opp_base[1]->index) : 0;
+	MY_first_dijkstras();
 	// game loop
 	while (1)
 	{
