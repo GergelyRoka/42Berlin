@@ -6,13 +6,13 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 22:55:42 by groka             #+#    #+#             */
-/*   Updated: 2023/06/10 04:09:22 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/10 08:17:53 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-t_node *create_node(int value);
+static t_node *create_node(int value);
 
 void init(t_stack *a, t_stack *b, char **array, int n)
 {
