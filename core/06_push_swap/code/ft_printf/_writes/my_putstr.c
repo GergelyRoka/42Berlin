@@ -1,26 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   my_putstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/22 22:55:47 by groka             #+#    #+#             */
-/*   Updated: 2023/06/10 04:14:24 by groka            ###   ########.fr       */
+/*   Created: 2023/02/06 11:36:48 by groka             #+#    #+#             */
+/*   Updated: 2023/02/09 17:50:14 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "writes.h"
 
-
-int main(int argc, char *argv[])
+int	my_putstr(char *s)
 {
-	t_stack a;
-	t_stack b;
-	
-	init(&a, &b, argv, argc);
-	do_sa(&a);
-	dev_write_stack(a);
+	int	out;
 
-	return	0;
+	out = 0;
+	if (s == NULL)
+	{
+		return (my_putstr("(null)"));
+	}
+	while (*s)
+		out += my_putchr(*s++);
+	return (out);
 }

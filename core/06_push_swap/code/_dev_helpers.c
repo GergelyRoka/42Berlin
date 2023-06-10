@@ -10,15 +10,19 @@
  * 
  * @param list t_node type, usually the head of a stack
  */
-void	dev_write_list(t_node	*list)
+void	dev_write_stack(t_stack	stack)
 {
 	int i;
+	t_node *list;
 
 	i = 0;
+	list = stack.head;
 	while(list)
 	{
 		printf("%i. [%i]\n", i , list->value);
 		++i;
 		list = list->next;
+		if (list == stack.head)
+			break;
 	}
 }

@@ -1,26 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   my_putdint.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/22 22:55:47 by groka             #+#    #+#             */
-/*   Updated: 2023/06/10 04:14:24 by groka            ###   ########.fr       */
+/*   Created: 2023/02/06 16:27:17 by groka             #+#    #+#             */
+/*   Updated: 2023/02/08 14:52:10 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "writes.h"
 
-
-int main(int argc, char *argv[])
+int	my_putdint(int number)
 {
-	t_stack a;
-	t_stack b;
-	
-	init(&a, &b, argv, argc);
-	do_sa(&a);
-	dev_write_stack(a);
+	long	num;
+	int		out;
 
-	return	0;
+	num = number;
+	out = 0;
+	if (num < 0)
+	{
+		my_putchr('-');
+		num = -num;
+		out++;
+	}
+	if (num / 10 != 0)
+		out += my_putdint(num / 10);
+	my_putchr(num % 10 + '0');
+	out++;
+	return (out);
 }
