@@ -6,7 +6,7 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 22:36:56 by groka             #+#    #+#             */
-/*   Updated: 2023/06/16 00:20:23 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/16 02:52:31 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ static void fill_steps(t_node *node)
 			steps = node->moves[i].steps;
 		++i;
 	}
+	node->steps = steps;
 }
 
 /**

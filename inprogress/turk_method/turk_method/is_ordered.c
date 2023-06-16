@@ -19,7 +19,7 @@ int is_a_ordered(t_node *a)
 	if (a->value > a->next->value)
 		return (false);
 	a = a->next;
-	while(a != 'h')
+	while(a->title != 'h')
 	{
 		if (a->value > a->next->value)
 			return (false);
@@ -47,7 +47,7 @@ int is_b_ordered(t_node *b)
 	if (b->value < b->next->value)
 		return (false);
 	b = b->next;
-	while(b != 'h')
+	while(b->title != 'h')
 	{
 		if (b->value < b->next->value)
 			return (false);
