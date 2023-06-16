@@ -24,4 +24,6 @@ t_node	*node_new_pos_b(t_node *b, t_node *node);
 t_node	*max_node_in_stack(t_node *stack);
 t_node	*min_node_in_stack(t_node *stack);
 
+t_node *node_new_pos_a(t_node *a, t_node *node);
+
 #endif

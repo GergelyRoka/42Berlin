@@ -6,7 +6,7 @@
 #    By: groka <groka@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 20:26:36 by tnakajo           #+#    #+#              #
-#    Updated: 2023/06/16 00:50:47 by groka            ###   ########.fr        #
+#    Updated: 2023/06/16 08:35:54 by groka            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,8 @@ SRCS	= checkers.c \
 			turk_method/is_ordered.c \
 			turk_method/fill_moves_n_steps.c \
 			turk_method/position_in_b.c \
-			turk_method/distance_from_top.c
+			turk_method/distance_from_top.c \
+			turk_method/position_in_a.c \
 
 OBJS	= $(SRCS:.c=.o)
 
