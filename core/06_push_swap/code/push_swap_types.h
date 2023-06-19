@@ -6,7 +6,7 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:38:52 by groka             #+#    #+#             */
-/*   Updated: 2023/06/19 14:40:45 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/19 21:27:25 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,6 @@
 #include <unistd.h>
 
 typedef enum e_title {nohead, head} t_title;
-
-typedef	struct s_rotates
-{
-	int		rotate_a;
-	int		rotate_b;
-	int		steps;
-}	t_rotates;
 
 typedef struct s_moves
 {
@@ -42,7 +35,6 @@ typedef struct s_node
 	struct s_node	*next;
 	t_title			title;
 	int				steps;
-	char			biggest;
 	t_moves			moves[4];
 }	t_node;
 
