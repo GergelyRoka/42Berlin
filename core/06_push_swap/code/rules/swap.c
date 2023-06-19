@@ -6,22 +6,22 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 12:33:39 by groka             #+#    #+#             */
-/*   Updated: 2023/06/19 12:33:40 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/20 00:20:42 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rules.h"
 
-static int swap(t_node **stack);
+static int	swap(t_node **stack);
 
 /**
  * @brief	sa (swap a): Swap the first 2 elements at the top of stack a.
  *			Do nothing if there is only one or no elements.
  * @param a Stack a.
  */
-void do_sa(t_node **a)
+void	do_sa(t_node **a)
 {
-	if(swap(a))
+	if (swap(a))
 		write(1, "sa\n", 3);
 }
 
@@ -30,10 +30,9 @@ void do_sa(t_node **a)
  *			Do nothing if there is only one or no elements.
  * @param b Stack a.
  */
-void do_sb(t_node **b)
+void	do_sb(t_node **b)
 {
-	
-	if(swap(b))
+	if (swap(b))
 		write(1, "sb\n", 3);
 }
 
@@ -42,9 +41,9 @@ void do_sb(t_node **b)
  * @param a Stack a.
  * @param b Stack b.
  */
-void do_ss(t_node **a, t_node **b)
+void	do_ss(t_node **a, t_node **b)
 {
-	if(swap(a) + swap(b))
+	if (swap(a) + swap(b))
 		write(1, "ss\n", 3);
 }
 
@@ -54,7 +53,7 @@ void do_ss(t_node **a, t_node **b)
  * @param stack 
  * @return int | 0 - if no need for swappind || 1 - if swapped |
  */
-static int swap(t_node **stack)
+static int	swap(t_node **stack)
 {
 	if ((*stack == NULL) || ((*stack) == (*stack)->next))
 		return (0);

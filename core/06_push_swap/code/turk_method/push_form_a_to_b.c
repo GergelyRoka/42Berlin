@@ -6,16 +6,16 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:06:28 by groka             #+#    #+#             */
-/*   Updated: 2023/06/19 16:09:16 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/20 00:16:37 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "turk_method.h"
 
 static t_node	*cheapest_node(t_node *stack);
-static void	do_rotates_phase_one(t_node **a, t_node **b, t_moves *moves);
-static void	do_rotates_phase_two(t_node **a, t_node **b, t_moves *moves);
-static t_moves *cheapest_move(t_node *node);
+static void		do_rotates_phase_one(t_node **a, t_node **b, t_moves *moves);
+static void		do_rotates_phase_two(t_node **a, t_node **b, t_moves *moves);
+static t_moves	*cheapest_move(t_node *node);
 
 void	push_from_a_to_b(t_node **a, t_node **b)
 {
@@ -40,15 +40,15 @@ void	push_from_a_to_b(t_node **a, t_node **b)
  */
 static t_node	*cheapest_node(t_node *stack)
 {
-	t_node *cheapest_node;
+	t_node	*cheapest_node;
 
 	if (stack == NULL)
 		return (NULL);
 	cheapest_node = stack;
 	if (stack == stack->next)
-		return(cheapest_node);
+		return (cheapest_node);
 	stack = stack->next;
-	while(stack->title != head)
+	while (stack->title != head)
 	{
 		if (cheapest_node->steps > stack->steps)
 			cheapest_node = stack;
@@ -66,18 +66,18 @@ static t_node	*cheapest_node(t_node *stack)
  */
 static void	do_rotates_phase_one(t_node **a, t_node **b, t_moves *moves)
 {
-	while(moves->rot_a > 0 && moves->rot_b > 0)
+	while (moves->rot_a > 0 && moves->rot_b > 0)
 	{
 		moves->rot_a--;
 		moves->rot_b--;
-		do_rr(a,b);
+		do_rr(a, b);
 	}
-	while(moves->rot_a > 0)
+	while (moves->rot_a > 0)
 	{
 		moves->rot_a--;
 		do_ra(a);
 	}
-	while(moves->rot_b > 0)
+	while (moves->rot_b > 0)
 	{
 		moves->rot_b--;
 		do_rb(b);
@@ -93,18 +93,18 @@ static void	do_rotates_phase_one(t_node **a, t_node **b, t_moves *moves)
  */
 static void	do_rotates_phase_two(t_node **a, t_node **b, t_moves *moves)
 {
-	while(moves->rot_a < 0 && moves->rot_b < 0)
+	while (moves->rot_a < 0 && moves->rot_b < 0)
 	{
 		moves->rot_a++;
 		moves->rot_b++;
-		do_rrr(a,b);
+		do_rrr(a, b);
 	}
-	while(moves->rot_a < 0)
+	while (moves->rot_a < 0)
 	{
 		moves->rot_a++;
 		do_rra(a);
 	}
-	while(moves->rot_b < 0)
+	while (moves->rot_b < 0)
 	{
 		moves->rot_b++;
 		do_rrb(b);
@@ -124,7 +124,7 @@ static t_moves	*cheapest_move(t_node *node)
 
 	move = &(node->moves[0]);
 	i = 1;
-	while(i < 4)
+	while (i < 4)
 	{
 		if (move->steps > node->moves[i].steps)
 			move = &(node->moves[i]);

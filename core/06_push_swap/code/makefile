@@ -6,7 +6,7 @@
 #    By: groka <groka@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 20:26:36 by tnakajo           #+#    #+#              #
-#    Updated: 2023/06/19 17:23:35 by groka            ###   ########.fr        #
+#    Updated: 2023/06/20 00:58:59 by groka            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,13 +20,12 @@ LIBFT_DIR	= ./libft
 LIBFT_PATH	= $(LIBFT_DIR)/$(LIBFT)
 
 SRCS	= checkers.c \
-			create_array.c \
 			push_swap.c \
 			sort_3.c \
 			sort_5.c \
-			utils.c \
 			linked_list/create_node.c \
 			linked_list/create_stack.c \
+			linked_list/free_stack.c \
 			rules/swap.c \
 			rules/push.c \
 			rules/rotate.c \
@@ -38,7 +37,9 @@ SRCS	= checkers.c \
 			turk_method/position_in_b.c \
 			turk_method/distance_from_top.c \
 			turk_method/position_in_a.c \
-			turk_method/size_of_stack.c
+			turk_method/size_of_stack.c \
+			turk_method/empty_b.c \
+			turk_method/finish_a.c \
 
 OBJS	= $(SRCS:.c=.o)
 
@@ -58,7 +59,7 @@ $(LIBFT):
 	mv $(LIBFT_PATH) ./
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(OBJS) -o $(NAME)
+	$(CC) $(OBJS) -o $@ $(LIBFT)
 
 clean:
 	make clean -C $(LIBFT_DIR)
@@ -66,6 +67,7 @@ clean:
 
 fclean: clean
 	make fclean -C $(LIBFT_DIR)
+	$(RM) $(LIBFT)
 	$(RM) $(NAME)
 
 re: fclean all

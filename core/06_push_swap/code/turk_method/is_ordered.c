@@ -6,14 +6,15 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:06:18 by groka             #+#    #+#             */
-/*   Updated: 2023/06/19 14:19:42 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/20 00:13:00 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "turk_method.h"
 
 /**
- * @brief	Return with true if every integer is ordered between the lowest and the highest number.
+ * @brief	Return with true if every integer is ordered between the lowest and
+ * 			the highest number.
  * 			Ascending order.
  *			Example 1)	1 2 3 4 5
  *			Example 2)	3 4 5 1 2 --> 1 2 3 4 5
@@ -22,7 +23,7 @@
  * @param a Stack.
  * @return int false == 0, true == 0
  */
-int is_a_ordered(t_node *a)
+int	is_a_ordered(t_node *a)
 {
 	if (a == NULL)
 		return (true);
@@ -31,7 +32,7 @@ int is_a_ordered(t_node *a)
 	if (a->value > a->next->value)
 		return (false);
 	a = a->next;
-	while(a->title != head)
+	while (a->title != head)
 	{
 		if (a->value > a->next->value)
 			return (false);
@@ -41,7 +42,8 @@ int is_a_ordered(t_node *a)
 }
 
 /**
- * @brief	Return with true if every integer is ordered between the highest and the lowest number.
+ * @brief	Return with true if every integer is ordered between the highest and
+ * 			the lowest number.
  * 			Descending order.
  *			Example 1)	5 4 3 2 1
  *			Example 2)	2 1 5 4 3 --> 5 4 3 2 1
@@ -50,7 +52,7 @@ int is_a_ordered(t_node *a)
  * @param a Stack.
  * @return int false == 0, true == 0
  */
-int is_b_ordered(t_node *b)
+int	is_b_ordered(t_node *b)
 {
 	if (b == NULL)
 		return (true);
@@ -59,7 +61,7 @@ int is_b_ordered(t_node *b)
 	if (b->value < b->next->value)
 		return (false);
 	b = b->next;
-	while(b->title != head)
+	while (b->title != head)
 	{
 		if (b->value < b->next->value)
 			return (false);

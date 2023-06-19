@@ -6,13 +6,19 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 16:46:27 by groka             #+#    #+#             */
-/*   Updated: 2023/06/19 17:01:20 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/20 00:30:42 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "linked_list.h"
 
-t_node  *create_stack(char **av) // add at the end -- when you call this you need to know there is at least one av
+/**
+ * @brief Create a stack object
+ * 
+ * @param av 
+ * @return t_node* 
+ */
+t_node	*create_stack(char **av)
 {
 	int		i;
 	t_node	*new_node;
@@ -26,7 +32,7 @@ t_node  *create_stack(char **av) // add at the end -- when you call this you nee
 	new_node->prev = new_node;
 	header = curr;
 	i = 2;
-	while(av[i])
+	while (av[i])
 	{
 		new_node = create_node(ft_atoi(av[i]));
 		header->prev = new_node;
@@ -37,5 +43,5 @@ t_node  *create_stack(char **av) // add at the end -- when you call this you nee
 		curr->title = nohead;
 		i++;
 	}
-	return(header);
+	return (header);
 }

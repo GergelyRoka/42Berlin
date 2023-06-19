@@ -6,7 +6,7 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 22:36:56 by groka             #+#    #+#             */
-/*   Updated: 2023/06/19 14:58:06 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/20 00:11:00 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int	max(int x, int y);
 static void	fill_moves(t_node *b, t_node *node);
-static void fill_steps(t_node *node);
+static void	fill_steps(t_node *node);
 
 /**
  * @brief 
@@ -66,14 +66,14 @@ static void	fill_moves(t_node *b, t_node *node)
  * 
  * @param node 
  */
-static void fill_steps(t_node *node)
+static void	fill_steps(t_node *node)
 {
 	int	i;
 	int	steps;
 
 	steps = node->moves[0].steps;
 	i = 1;
-	while(i < 4)
+	while (i < 4)
 	{
 		if (node->moves[i].steps < steps)
 			steps = node->moves[i].steps;
@@ -89,7 +89,7 @@ static void fill_steps(t_node *node)
  * @param y 
  * @return int 
  */
-static int max(int x, int y)
+static int	max(int x, int y)
 {
 	if (x > y)
 		return (x);

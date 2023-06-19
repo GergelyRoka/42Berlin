@@ -6,7 +6,7 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 12:33:10 by groka             #+#    #+#             */
-/*   Updated: 2023/06/19 14:03:37 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/20 00:19:27 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ void	do_pb(t_node **a, t_node **b)
  */
 static int	push(t_node **dest, t_node **src)
 {
-	t_node *new_head;
+	t_node	*new_head;
 
-	if(*src == NULL)
-		return(0);
-	if(!(*dest))
+	if (*src == NULL)
+		return (0);
+	if (!(*dest))
 	{
 		*dest = pop(src);
 		(*dest)->next = *dest;
@@ -64,7 +64,7 @@ static int	push(t_node **dest, t_node **src)
 	{
 		new_head = pop(src);
 		(*dest)->prev->next = new_head;
-		new_head->prev = (*dest)->prev; 
+		new_head->prev = (*dest)->prev;
 		new_head->next = (*dest);
 		(*dest)->prev = new_head;
 		(*dest)->title = nohead;
@@ -81,21 +81,21 @@ static int	push(t_node **dest, t_node **src)
  */
 static t_node	*pop(t_node **src)
 {
-	t_node *top;
+	t_node	*top;
 
-	if(*src == (*src)->next)
+	if (*src == (*src)->next)
 	{
 		top = *src;
 		*src = NULL;
 		return (top);
 	}
 	else
-	{	
+	{
 		top = *src;
-		(*src)->prev->next = (*src)->next; 
+		(*src)->prev->next = (*src)->next;
 		(*src)->next->prev = (*src)->prev;
 		(*src) = (*src)->next;
 		(*src)->title = head;
 	}
-	return(top);
+	return (top);
 }

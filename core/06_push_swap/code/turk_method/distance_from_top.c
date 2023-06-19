@@ -6,7 +6,7 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:06:13 by groka             #+#    #+#             */
-/*   Updated: 2023/06/19 14:20:40 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/20 00:09:28 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,19 @@
  * @param node 	A node to the top!
  * @return int 	Steps to the top.
  */
-int dist_w_rot(t_node *node)
+int	dist_w_rot(t_node *node)
 {
-	int dist;
+	int	dist;
 
 	dist = 0;
-	if	(node == NULL || node->title == head)
+	if (node == NULL || node->title == head)
 		return (dist);
-	while(node->title != head)
+	while (node->title != head)
 	{
 		++dist;
 		node = node->prev;
 	}
-	return(dist);
+	return (dist);
 }
 
 /**
@@ -41,17 +41,17 @@ int dist_w_rot(t_node *node)
  * @param node	A node to the top!
  * @return int	Steps to the top.
  */
-int dist_w_rev_rot(t_node *node)
+int	dist_w_rev_rot(t_node *node)
 {
-	int dist;
+	int	dist;
 
 	dist = 0;
-	if	(node == NULL || node->title == head)
+	if (node == NULL || node->title == head)
 		return (dist);
-	while(node->title != head)
+	while (node->title != head)
 	{
 		++dist;
 		node = node->next;
 	}
-	return(dist);
+	return (dist);
 }

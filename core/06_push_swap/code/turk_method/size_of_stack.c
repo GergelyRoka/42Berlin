@@ -6,7 +6,7 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:06:32 by groka             #+#    #+#             */
-/*   Updated: 2023/06/19 16:10:08 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/20 00:17:00 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
  */
 int	size_of_stack(t_node *stack)
 {
-	int size;
+	int	size;
 
 	if (stack == NULL)
 		return (0);
@@ -28,7 +28,7 @@ int	size_of_stack(t_node *stack)
 		return (1);
 	stack = stack->next;
 	size = 1;
-	while(stack->title != head)
+	while (stack->title != head)
 	{
 		++size;
 		stack = stack->next;

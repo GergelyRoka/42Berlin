@@ -6,15 +6,15 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:06:24 by groka             #+#    #+#             */
-/*   Updated: 2023/06/19 16:15:29 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/20 00:15:05 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "turk_method.h"
 
 t_node			*node_new_pos_b(t_node *b, t_node *node);
-t_node	*min_node_in_stack(t_node *stack);
-t_node	*max_node_in_stack(t_node *stack);
+t_node			*min_node_in_stack(t_node *stack);
+t_node			*max_node_in_stack(t_node *stack);
 static t_node	*mid_pos_in_stack(t_node *stack, t_node *node);
 
 /**
@@ -24,7 +24,7 @@ static t_node	*mid_pos_in_stack(t_node *stack, t_node *node);
  * @param node Node from stack A looking for a place in stack B.
  * @return t_node* This node will be the next of the new node.
  */
-t_node *node_new_pos_b(t_node *b, t_node *node)
+t_node	*node_new_pos_b(t_node *b, t_node *node)
 {
 	t_node	*min_node;
 	t_node	*max_node;
@@ -34,10 +34,10 @@ t_node *node_new_pos_b(t_node *b, t_node *node)
 	min_node = min_node_in_stack(b);
 	max_node = max_node_in_stack(b);
 	if (min_node->value > node->value)
-		return(max_node);
+		return (max_node);
 	if (max_node->value < node->value)
-		return(max_node);
-	return(mid_pos_in_stack(b, node));
+		return (max_node);
+	return (mid_pos_in_stack(b, node));
 }
 
 /**
@@ -46,10 +46,10 @@ t_node *node_new_pos_b(t_node *b, t_node *node)
  * @param stack 
  * @return t_node* 
  */
-t_node *min_node_in_stack(t_node *stack)
+t_node	*min_node_in_stack(t_node *stack)
 {
 	t_node	*min_node;
-	
+
 	if (stack == NULL)
 		return (0);
 	min_node = stack;
@@ -72,7 +72,7 @@ t_node *min_node_in_stack(t_node *stack)
 t_node	*max_node_in_stack(t_node *stack)
 {
 	t_node	*max_node;
-	
+
 	if (stack == NULL)
 		return (0);
 	max_node = stack;
@@ -99,7 +99,7 @@ t_node	*max_node_in_stack(t_node *stack)
 static t_node	*mid_pos_in_stack(t_node *stack, t_node *node)
 {
 	while (!(stack->value < node->value
-		&& stack->prev->value > node->value))
+			&& stack->prev->value > node->value))
 		stack = stack->next;
 	return (stack);
 }

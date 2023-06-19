@@ -1,29 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   turk_method.c                                      :+:      :+:    :+:   */
+/*   free_stack.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/19 14:06:35 by groka             #+#    #+#             */
-/*   Updated: 2023/06/20 00:17:19 by groka            ###   ########.fr       */
+/*   Created: 2023/06/20 00:22:25 by groka             #+#    #+#             */
+/*   Updated: 2023/06/20 00:33:40 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "turk_method.h"
+#include "linked_list.h"
 
 /**
- * @brief https://medium.com/@ayogun/push-swap-c1f5d2d41e97
+ * @brief Destroy the stack! Free all items!
  * 
- * @param a Stack A
- * @param b Stack B
+ * @param stack 
  */
-void	turk_method(t_node **a, t_node **b)
+void	free_stack(t_node **stack)
 {
-	while (size_of_stack(*a) > 5 && !is_a_ordered(*a))
-		push_from_a_to_b(a, b);
-	if (size_of_stack(*a) == 5 && !is_a_ordered(*a))
-		ft_five_nums(a, b);
-	empty_b(a, b);
-	finish_a(a);
+	t_node	*node;
+
+	if ((*stack) == NULL)
+		return ;
+	(*stack)->prev->next = NULL;
+	while (*stack)
+	{
+		node = (*stack);
+		(*stack) = (*stack)->next;
+		free(node);
+	}
 }
