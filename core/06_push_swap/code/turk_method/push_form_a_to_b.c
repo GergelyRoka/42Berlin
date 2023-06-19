@@ -6,17 +6,23 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:06:28 by groka             #+#    #+#             */
-/*   Updated: 2023/06/20 00:16:37 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/20 01:17:43 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "turk_method.h"
 
 static t_node	*cheapest_node(t_node *stack);
-static void		do_rotates_phase_one(t_node **a, t_node **b, t_moves *moves);
-static void		do_rotates_phase_two(t_node **a, t_node **b, t_moves *moves);
+static void		do_rotates_part_one(t_node **a, t_node **b, t_moves *moves);
+static void		do_rotates_part_two(t_node **a, t_node **b, t_moves *moves);
 static t_moves	*cheapest_move(t_node *node);
 
+/**
+ * @brief 
+ * 
+ * @param a Stack a.
+ * @param b Stack b.
+ */
 void	push_from_a_to_b(t_node **a, t_node **b)
 {
 	t_node	*moving_node;
@@ -25,8 +31,8 @@ void	push_from_a_to_b(t_node **a, t_node **b)
 	fill_moves_n_steps(*a, *b);
 	moving_node = cheapest_node(*a);
 	move = cheapest_move(moving_node);
-	do_rotates_phase_one(a, b, move);
-	do_rotates_phase_two(a, b, move);
+	do_rotates_part_one(a, b, move);
+	do_rotates_part_two(a, b, move);
 	if (*a != moving_node)
 		write(1, "ERROR with push_from_a_to_b\n", 28);
 	do_pb(a, b);
@@ -64,7 +70,7 @@ static t_node	*cheapest_node(t_node *stack)
  * @param b 
  * @param moves 
  */
-static void	do_rotates_phase_one(t_node **a, t_node **b, t_moves *moves)
+static void	do_rotates_part_one(t_node **a, t_node **b, t_moves *moves)
 {
 	while (moves->rot_a > 0 && moves->rot_b > 0)
 	{
@@ -91,7 +97,7 @@ static void	do_rotates_phase_one(t_node **a, t_node **b, t_moves *moves)
  * @param b 
  * @param moves 
  */
-static void	do_rotates_phase_two(t_node **a, t_node **b, t_moves *moves)
+static void	do_rotates_part_two(t_node **a, t_node **b, t_moves *moves)
 {
 	while (moves->rot_a < 0 && moves->rot_b < 0)
 	{
