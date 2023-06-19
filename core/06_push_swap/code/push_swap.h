@@ -5,42 +5,59 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/22 22:55:50 by groka             #+#    #+#             */
-/*   Updated: 2023/06/10 04:13:58 by groka            ###   ########.fr       */
+/*   Created: 2023/06/19 12:33:29 by groka             #+#    #+#             */
+/*   Updated: 2023/06/19 17:27:16 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef PUSH_SWAP_H
+# define PUSH_SWAP_H
+
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
-#include "ft_printf/ft_printf.h"
+#include <stdlib.h>
+#include <limits.h>
+//#include "turk_method/turk_method.h"
+#include "push_swap_types.h"
+#include "rules/rules.h"
 
-/**
- * @brief Element type for the stacks.
- * 
- */
-typedef struct s_node
-{
-	int				value;
-	struct s_node	*next;
-	struct s_node	*prev;
-}					t_node;
 
-typedef struct s_stack
-{
-	t_node	*head;
-	t_node	*last;
-}			t_stack;
+//CHECKERS
+int	check_duplicates(char **av);
+int	check_digit(char *str);
 
-//dev helpers
-void	dev_write_stack(t_stack	stack);
-
+//OTHERS
+t_node	*create_stack(char **av);
+t_node	*create_node(int n);
+void	print_stack(t_node *a);
+/*
 //RULES
-//swap
-void do_sa(t_stack *a);
-void do_sb(t_stack *b);
-void do_ss(t_stack *a, t_stack *b);
+void		do_sa(t_node **a);
+void		do_sb(t_node **b);
+void		do_ss(t_node **a, t_node **b);
+void		do_pa(t_node **a, t_node **b);
+void		do_pb(t_node **a, t_node **b);
+int		push(t_node **a, t_node **b);
+int		rotate(t_node **stack);
+void		do_rr(t_node **a, t_node **b);
+void		do_rb(t_node **b);
+void		do_ra(t_node **a);
+int		rrotate(t_node **stack);
+void		do_rrb(t_node **b);
+void		do_rra(t_node **a);
+void		do_rrr(t_node **a, t_node **b);
+t_node		*pull(t_node **src);
+*/
+void	ft_three_nums(t_node **stack);
+void	ft_five_nums(t_node **a, t_node **b);
 
+void	ft_sort_big(t_node **a, t_node **b, int *array, int size);
 
-//init
-void init(t_stack *a, t_stack *b, char **array, int n);
+void _10minutes_sort(t_node **a, t_node **b);
+
+//array
+void	bubble_sort(int *array, int size);
+int		*create_array(int size, t_node *stack);
+void	array_three_biggest_number(int size, int *array, t_node *stack);
+
+#endif
