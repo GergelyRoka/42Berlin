@@ -6,7 +6,7 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:06:28 by groka             #+#    #+#             */
-/*   Updated: 2023/06/20 03:55:37 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/20 08:36:25 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,8 +120,8 @@ static void	do_rotates_part_two(t_node **a, t_node **b, t_moves *moves)
 /**
  * @brief The function gives back the first cheapest move of a node.
  * 
- * @param node 
- * @return t_moves* 
+ * @param node A node.
+ * @return t_moves* Member moves of struct node.
  */
 static t_moves	*cheapest_move(t_node *node)
 {

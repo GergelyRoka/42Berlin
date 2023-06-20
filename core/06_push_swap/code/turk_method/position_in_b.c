@@ -6,7 +6,7 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:06:24 by groka             #+#    #+#             */
-/*   Updated: 2023/06/20 03:53:51 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/20 08:36:25 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ t_node	*node_new_pos_b(t_node *b, t_node *node)
 /**
  * @brief The function gives back a node with the lowest value in a stack.
  * 
- * @param stack Stack b.
+ * @param stack Stack.
  * @return t_node* 
  */
 t_node	*min_node_in_stack(t_node *stack)
