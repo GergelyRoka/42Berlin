@@ -6,14 +6,15 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 23:57:37 by groka             #+#    #+#             */
-/*   Updated: 2023/06/20 00:37:03 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/20 03:48:21 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "turk_method.h"
 
 /**
- * @brief 
+ * @brief	Rotating the ordered stack a until it is sorted.
+ * 			Top node is the smallest integer.
  * 
  * @param a Stack a.
  */

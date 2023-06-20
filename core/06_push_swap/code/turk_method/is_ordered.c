@@ -5,67 +5,40 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/19 14:06:18 by groka             #+#    #+#             */
-/*   Updated: 2023/06/20 00:13:00 by groka            ###   ########.fr       */
+/*   Created: 2023/06/20 01:56:28 by groka             #+#    #+#             */
+/*   Updated: 2023/06/20 02:13:27 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "turk_method.h"
 
 /**
- * @brief	Return with true if every integer is ordered between the lowest and
- * 			the highest number.
- * 			Ascending order.
- *			Example 1)	1 2 3 4 5
- *			Example 2)	3 4 5 1 2 --> 1 2 3 4 5
- *
- * @note BUG: this version gives true only if it is sorted too, like "1 2 3 4"
- * @param a Stack.
- * @return int false == 0, true == 0
+ * @brief	If every number is in ascending order between the minimum value and
+ * 			the maximum value then returns true.
+ * 			1) Example: 1 2 3 4 5
+ * 			2) Example: 4 5 1 2 3
+ * @param a Sack a.
+ * @return int (1 - true) if the stack ordered || otherwise (0 - false)
  */
 int	is_a_ordered(t_node *a)
 {
-	if (a == NULL)
-		return (true);
-	if (a == a->next)
-		return (true);
-	if (a->value > a->next->value)
-		return (false);
-	a = a->next;
-	while (a->title != head)
-	{
-		if (a->value > a->next->value)
-			return (false);
-		a = a -> next;
-	}
-	return (true);
-}
+	t_node	*min_node;
+	t_node	*max_node;
+	int		count;
 
-/**
- * @brief	Return with true if every integer is ordered between the highest and
- * 			the lowest number.
- * 			Descending order.
- *			Example 1)	5 4 3 2 1
- *			Example 2)	2 1 5 4 3 --> 5 4 3 2 1
- *
- * @note BUG: this version gives true only if it is sorted too, like "4 3 2 1"
- * @param a Stack.
- * @return int false == 0, true == 0
- */
-int	is_b_ordered(t_node *b)
-{
-	if (b == NULL)
+	if (!a)
 		return (true);
-	if (b == b->next)
-		return (true);
-	if (b->value < b->next->value)
-		return (false);
-	b = b->next;
-	while (b->title != head)
+	min_node = min_node_in_stack(a);
+	max_node = max_node_in_stack(a);
+	count = 1;
+	while (min_node != max_node)
 	{
-		if (b->value < b->next->value)
+		if (min_node->value > min_node->next->value)
 			return (false);
-		b = b -> next;
+		min_node = min_node->next;
+		++count;
 	}
-	return (true);
+	if (count == size_of_stack(a))
+		return (true);
+	return (false);
 }

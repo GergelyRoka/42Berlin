@@ -6,17 +6,17 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 16:46:27 by groka             #+#    #+#             */
-/*   Updated: 2023/06/20 00:30:42 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/20 03:43:08 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "linked_list.h"
 
 /**
- * @brief Create a stack object
+ * @brief Create a stack using command line arguments.
  * 
- * @param av 
- * @return t_node* 
+ * @param av Command line arguments.
+ * @return t_node* Top/head of the stack.
  */
 t_node	*create_stack(char **av)
 {

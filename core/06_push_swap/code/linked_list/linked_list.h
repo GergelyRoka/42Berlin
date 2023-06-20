@@ -6,7 +6,7 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 16:37:56 by groka             #+#    #+#             */
-/*   Updated: 2023/06/20 00:30:09 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/20 01:50:53 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,6 @@
 t_node	*create_node(int n);
 t_node	*create_stack(char **av);
 void	free_stack(t_node **stack);
+void	free_stacks(t_node **a, t_node **b);
 
 #endif

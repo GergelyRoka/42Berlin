@@ -6,7 +6,7 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:06:28 by groka             #+#    #+#             */
-/*   Updated: 2023/06/20 01:17:43 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/20 03:55:37 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,11 @@ static t_node	*cheapest_node(t_node *stack)
 }
 
 /**
- * @brief 
+ * @brief Using a node's moves to rotate the stacks. Part 1.
  * 
- * @param a 
- * @param b 
- * @param moves 
+ * @param a Stack a.
+ * @param b Stack b.
+ * @param moves The moving node's moves.
  */
 static void	do_rotates_part_one(t_node **a, t_node **b, t_moves *moves)
 {
@@ -91,11 +91,11 @@ static void	do_rotates_part_one(t_node **a, t_node **b, t_moves *moves)
 }
 
 /**
- * @brief 
+ * @brief Using a node's moves to rotate the stacks. Part 2.
  * 
- * @param a 
- * @param b 
- * @param moves 
+ * @param a Stack a.
+ * @param b Stack b.
+ * @param moves The moving node's moves.
  */
 static void	do_rotates_part_two(t_node **a, t_node **b, t_moves *moves)
 {

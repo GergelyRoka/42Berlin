@@ -6,7 +6,7 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 22:36:56 by groka             #+#    #+#             */
-/*   Updated: 2023/06/20 00:11:00 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/20 03:46:18 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ static void	fill_moves(t_node *b, t_node *node);
 static void	fill_steps(t_node *node);
 
 /**
- * @brief 
+ * @brief Initializing member moves and member steps of each node of stack a.
  * 
- * @param a 
- * @param b 
+ * @param a Stack a.
+ * @param b Stack b.
  */
 void	fill_moves_n_steps(t_node *a, t_node *b)
 {

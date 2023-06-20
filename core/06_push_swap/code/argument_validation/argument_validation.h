@@ -1,32 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_node.c                                      :+:      :+:    :+:   */
+/*   argument_validation.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/19 16:39:11 by groka             #+#    #+#             */
-/*   Updated: 2023/06/20 03:41:52 by groka            ###   ########.fr       */
+/*   Created: 2023/06/20 02:40:32 by groka             #+#    #+#             */
+/*   Updated: 2023/06/20 03:13:29 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "linked_list.h"
+#ifndef ARGUMENT_VALIDATION_H
+# define ARGUMENT_VALIDATION_H
+# include "../push_swap.h"
+# include "../libft/libft.h"
 
-/**
- * @brief Create a node.
- * 
- * @param n The value, the integer of the node.
- * @return t_node* 
- */
-t_node	*create_node(int n)
-{
-	t_node	*new_node;
+int	argument_validation(char **av);
 
-	new_node = (t_node *)malloc(sizeof(t_node));
-	if (new_node == NULL)
-		return (NULL);
-	new_node->value = n;
-	new_node->next = NULL;
-	new_node->prev = NULL;
-	return (new_node);
-}
+#endif

@@ -6,7 +6,7 @@
 #    By: groka <groka@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 20:26:36 by tnakajo           #+#    #+#              #
-#    Updated: 2023/06/20 00:58:59 by groka            ###   ########.fr        #
+#    Updated: 2023/06/20 03:07:14 by groka            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,10 +19,8 @@ LIBFT		= libft.a
 LIBFT_DIR	= ./libft
 LIBFT_PATH	= $(LIBFT_DIR)/$(LIBFT)
 
-SRCS	= checkers.c \
-			push_swap.c \
-			sort_3.c \
-			sort_5.c \
+SRCS	=	push_swap.c \
+			argument_validation/argument_validation.c \
 			linked_list/create_node.c \
 			linked_list/create_stack.c \
 			linked_list/free_stack.c \
@@ -31,8 +29,10 @@ SRCS	= checkers.c \
 			rules/rotate.c \
 			rules/reverse_rotate.c \
 			turk_method/turk_method.c \
+			turk_method/sort_three.c \
 			turk_method/push_form_a_to_b.c \
 			turk_method/is_ordered.c \
+			turk_method/is_sorted.c \
 			turk_method/fill_moves_n_steps.c \
 			turk_method/position_in_b.c \
 			turk_method/distance_from_top.c \
@@ -45,6 +45,7 @@ OBJS	= $(SRCS:.c=.o)
 
 DEPS	=	push_swap.h \
 			push_swap_types.h \
+			argument_validation.h \
 			linked_list/linked_list.h \
 			rules/rules.h \
 			turk_method/turk_method.h \
