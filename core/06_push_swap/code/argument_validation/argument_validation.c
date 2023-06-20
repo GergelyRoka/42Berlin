@@ -6,7 +6,7 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 02:45:41 by groka             #+#    #+#             */
-/*   Updated: 2023/06/20 03:40:40 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/20 09:31:24 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 static int	duplicate_check(char **av);
 static int	number_check(char **av);
+static void	malloc_failure_exit(void);
 
 /**
  * @brief	Check the argument list for okayish.
@@ -71,6 +72,8 @@ static int	number_check(char **av)
 	while (av[i])
 	{
 		str_nbr = ft_itoa(ft_atoi(av[i]));
+		if (!(str_nbr))
+			malloc_failure_exit();
 		if (ft_strcmp(av[i], str_nbr) != 0)
 		{
 			free(str_nbr);
@@ -80,4 +83,11 @@ static int	number_check(char **av)
 		++i;
 	}
 	return (true);
+}
+
+static void	malloc_failure_exit(void)
+{
+	write(2, "Error\n", 6);
+	write(2, "Malloc failure.\n", 16);
+	exit(42);
 }
