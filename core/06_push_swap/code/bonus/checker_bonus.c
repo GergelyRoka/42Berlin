@@ -6,7 +6,7 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 01:38:23 by groka             #+#    #+#             */
-/*   Updated: 2023/06/22 03:18:43 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/22 03:41:37 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 #include <stdio.h> 
 
-static void	error_exit(t_node **a, t_node **b);
+static void	error_exit(t_node **a, t_node **b, char *line);
 static void	do_rules(t_node **a, t_node **b, char *line);
 static void	arg_check(int ac, char **av);
 
@@ -81,11 +81,12 @@ static void	do_rules(t_node **a, t_node **b, char *line)
 	else if (ft_strcmp(line, "ss\n") == 0)
 		do_ss(a, b);
 	else
-		error_exit(a, b);
+		error_exit(a, b, line);
 }
 
-static void	error_exit(t_node **a, t_node **b)
+static void	error_exit(t_node **a, t_node **b, char *line)
 {
+	free(line);
 	free_stacks(a, b);
 	write(2, "Error\n", 6);
 	exit(42);
