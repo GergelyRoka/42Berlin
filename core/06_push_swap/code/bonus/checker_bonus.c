@@ -6,7 +6,7 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/22 01:38:23 by groka             #+#    #+#             */
-/*   Updated: 2023/06/22 02:55:11 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/22 03:18:43 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 static void	error_exit(t_node **a, t_node **b);
 static void	do_rules(t_node **a, t_node **b, char *line);
+static void	arg_check(int ac, char **av);
 
 int	main(int ac, char **av)
 {
@@ -26,13 +27,7 @@ int	main(int ac, char **av)
 	t_node	*a;
 	t_node	*b;
 
-	if (ac == 1)
-		return (0);
-	if (!argument_validation(av))
-	{
-		write(2, "Error\n", 6);
-		return (42);
-	}
+	arg_check(ac, av);
 	a = create_stack(av);
 	b = NULL;
 	line = get_next_line(STDIN_FILENO);
@@ -42,7 +37,7 @@ int	main(int ac, char **av)
 		free(line);
 		line = get_next_line(STDIN_FILENO);
 	}
-	if (is_a_sorted(a))
+	if (is_a_sorted(a) && (b == NULL))
 		write(1, "OK\n", 3);
 	else
 		write(1, "KO\n", 3);
@@ -50,9 +45,19 @@ int	main(int ac, char **av)
 	return (0);
 }
 
+static void	arg_check(int ac, char **av)
+{
+	if (ac == 1)
+		exit(0);
+	if (!argument_validation(av))
+	{
+		write(2, "Error\n", 6);
+		exit(42);
+	}
+}
+
 static void	do_rules(t_node **a, t_node **b, char *line)
 {
-
 	if (ft_strcmp(line, "pa\n") == 0)
 		do_pa(a, b);
 	else if (ft_strcmp(line, "pb\n") == 0)

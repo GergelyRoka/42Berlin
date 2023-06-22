@@ -6,12 +6,12 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 12:55:23 by groka             #+#    #+#             */
-/*   Updated: 2023/06/22 01:58:28 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/22 03:19:17 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef RULES_H
-# define RULES_H
+#ifndef RULES_BONUS_H
+# define RULES_BONUS_H
 
 # include "../../push_swap_types.h"
 

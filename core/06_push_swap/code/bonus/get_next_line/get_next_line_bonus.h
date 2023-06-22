@@ -6,12 +6,12 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 13:33:15 by groka             #+#    #+#             */
-/*   Updated: 2023/06/22 02:45:50 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/22 03:19:48 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 10
