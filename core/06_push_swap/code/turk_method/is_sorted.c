@@ -6,15 +6,14 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:06:18 by groka             #+#    #+#             */
-/*   Updated: 2023/06/22 02:51:50 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/22 03:26:56 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "turk_method.h"
 
 /**
- * @brief	Return with true if every integer is sorted between the lowest and
- * 			the highest number.
+ * @brief	Return with true if the stack is sorted from top to bottom.
  * 			Ascending order.
  * 			Example: 1 2 3 4 5
  *
@@ -40,8 +39,7 @@ int	is_a_sorted(t_node *a)
 }
 
 /**
- * @brief	Return with true if every integer is sorted between the highest and
- * 			the lowest number.
+ * @brief	Return with true if the stack is sorted from top to bottom.
  * 			Descending order.
  *			Example: 5 4 3 2 1
  *
