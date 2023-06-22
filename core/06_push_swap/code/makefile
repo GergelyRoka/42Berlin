@@ -6,13 +6,13 @@
 #    By: groka <groka@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 20:26:36 by tnakajo           #+#    #+#              #
-#    Updated: 2023/06/22 03:00:41 by groka            ###   ########.fr        #
+#    Updated: 2023/06/22 03:39:33 by groka            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= push_swap
 NAME_BONUS	= checker
-CC			= cc -Wall -Wextra
+CC			= cc -Wall -Wextra -Werror
 RM			= rm -f
 
 #libft - library
