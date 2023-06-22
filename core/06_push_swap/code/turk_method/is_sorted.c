@@ -6,7 +6,7 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:06:18 by groka             #+#    #+#             */
-/*   Updated: 2023/06/20 02:02:02 by groka            ###   ########.fr       */
+/*   Updated: 2023/06/22 02:51:50 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	is_a_sorted(t_node *a)
 	if (a->value > a->next->value)
 		return (false);
 	a = a->next;
-	while (a->title != head)
+	while (a->next->title != head)
 	{
 		if (a->value > a->next->value)
 			return (false);
@@ -57,7 +57,7 @@ int	is_b_sorted(t_node *b)
 	if (b->value < b->next->value)
 		return (false);
 	b = b->next;
-	while (b->title != head)
+	while (b->next->title != head)
 	{
 		if (b->value < b->next->value)
 			return (false);
