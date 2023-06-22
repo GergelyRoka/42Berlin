@@ -6,13 +6,14 @@
 #    By: groka <groka@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 20:26:36 by tnakajo           #+#    #+#              #
-#    Updated: 2023/06/20 04:18:04 by groka            ###   ########.fr        #
+#    Updated: 2023/06/22 03:00:41 by groka            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-CC		= cc -Wall -Wextra -Werror
-NAME	= push_swap
-RM		= rm -f
+NAME		= push_swap
+NAME_BONUS	= checker
+CC			= cc -Wall -Wextra
+RM			= rm -f
 
 #libft - library
 LIBFT		= libft.a
@@ -41,7 +42,22 @@ SRCS	=	push_swap.c \
 			turk_method/empty_b.c \
 			turk_method/finish_a.c \
 
-OBJS	= $(SRCS:.c=.o)
+SRCS_BONUS	=	bonus/checker_bonus.c \
+				bonus/get_next_line/get_next_line_bonus.c \
+				bonus/get_next_line/get_next_line_utils_bonus.c \
+				bonus/rules/push_bonus.c \
+				bonus/rules/rotate_bonus.c \
+				bonus/rules/reverse_rotate_bonus.c \
+				bonus/rules/swap_bonus.c \
+				argument_validation/argument_validation.c \
+				linked_list/create_node.c \
+				linked_list/create_stack.c \
+				linked_list/free_stack.c \
+				turk_method/is_sorted.c \
+
+OBJS		= $(SRCS:.c=.o)
+
+OBJS_BONUS	=	$(SRCS_BONUS:.c=.o)
 
 DEPS	=	push_swap.h \
 			push_swap_types.h \
@@ -50,26 +66,40 @@ DEPS	=	push_swap.h \
 			rules/rules.h \
 			turk_method/turk_method.h \
 
+DEPS_BONUS	=	bonus/rules/rules.h \
+				bonus/get_next_line/get_next_line_bonus.h \
+				argument_validation/argument_validation.h \
+				linked_list/linked_list.h \
+				turk_method/turk_method.h \
+
 %.o: %.c
 		$(CC) -c -o $@ $<
 
-all: $(NAME)
+$(NAME): $(OBJS) $(LIBFT)
+	$(CC) $(OBJS) -o $@ $(LIBFT)
+
+all: $(NAME) $(NAME_BONUS)
 
 $(LIBFT):
 	make -C $(LIBFT_DIR)
 	mv $(LIBFT_PATH) ./
 
-$(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(OBJS) -o $@ $(LIBFT)
+
+$(NAME_BONUS): $(OBJS_BONUS) $(LIBFT)
+	$(CC) $(OBJS_BONUS) -o $@ $(LIBFT)
+
+bonus: $(NAME_BONUS)
 
 clean:
 	make clean -C $(LIBFT_DIR)
 	$(RM) $(OBJS)
+	$(RM) $(OBJS_BONUS)
 
 fclean: clean
 	make fclean -C $(LIBFT_DIR)
 	$(RM) $(LIBFT)
 	$(RM) $(NAME)
+	$(RM) $(NAME_BONUS)
 
 re: fclean all
 
