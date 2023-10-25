@@ -30,8 +30,8 @@ SRCS = ./ft_printf.c \
 		./_writes/my_putdint.c \
 		./_writes/my_putint.c \
 		./_writes/my_putuint.c \
-		./_writes/my_putxint.c \
-		./_writes/my_putXint.c \
+		#./_writes/my_putxint.c \
+		#./_writes/my_putXint.c \
 
 OBJS = $(SRCS:.c=.o)
 

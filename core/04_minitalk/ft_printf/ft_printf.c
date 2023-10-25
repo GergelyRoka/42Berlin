@@ -70,10 +70,10 @@ static int	write_param(const char *s, va_list *parameters)
 		return (my_putint((int)va_arg(*parameters, int)));
 	else if (*s == 'u')
 		return (my_putuint((unsigned int)va_arg(*parameters, unsigned int)));
-	else if (*s == 'x')
+	/*else if (*s == 'x')
 		return (my_putxint((unsigned int)va_arg(*parameters, unsigned int)));
 	else if (*s == 'X')
-		return (my_putx2int((unsigned int)va_arg(*parameters, unsigned int)));
+		return (my_putx2int((unsigned int)va_arg(*parameters, unsigned int)));*/
 	else if (*s == '%')
 		return (my_putchr('%'));
 	else

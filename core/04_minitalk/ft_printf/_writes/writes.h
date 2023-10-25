@@ -21,7 +21,7 @@ int	my_putp(void *pointer);
 int	my_putdint(int number);
 int	my_putint(int number);
 int	my_putuint(unsigned int number);
-int	my_putxint(unsigned int number);
-int	my_putx2int(unsigned int number);
+//int	my_putxint(unsigned int number);
+//int	my_putx2int(unsigned int number);
 
 #endif
