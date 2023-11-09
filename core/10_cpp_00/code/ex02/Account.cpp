@@ -104,8 +104,8 @@ bool	Account::makeWithdrawal( int withdrawal )
 	std::ostringstream	message;
 
 	Account::_displayTimestamp();
-	message	<< "index:"				<< _accountIndex	<< ";"
-		<< "p_amount:"			<< _amount			<< ";";
+	message		<< "index:"				<< _accountIndex	<< ";"
+				<< "p_amount:"			<< _amount			<< ";";
 	if (withdrawal > _amount)
 	{
 		message << "withdrawal:refused" << std::endl;
