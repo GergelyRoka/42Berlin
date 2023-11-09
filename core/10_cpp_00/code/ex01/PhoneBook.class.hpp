@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   PhoneBook.class.hpp                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/09 01:38:53 by groka             #+#    #+#             */
+/*   Updated: 2023/11/09 01:38:53 by groka            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #pragma once //not standard header guard but supported by the g++ compiler on linux
 
 #include "Contact.class.hpp"
