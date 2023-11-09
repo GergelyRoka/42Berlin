@@ -17,9 +17,9 @@ Zombie::Zombie( void )
 	name = "nameless";
 }
 
-Zombie::Zombie( std::string param )
+Zombie::Zombie( std::string name )
 {
-	name = param;
+	this->name = name;
 }
 
 Zombie::~Zombie( void )
@@ -27,7 +27,7 @@ Zombie::~Zombie( void )
 	std::cout << "Little zombie, " << name << ", is destroyed." << std::endl;
 }
 
-void Zombie::announce( void )
+void Zombie::announce( void ) const
 {
 	std::cout << name << ": BraiiiiiiinnnzzzZ..." << std::endl;
 }
