@@ -12,15 +12,9 @@
 
 #include "Zombie.hpp"
 
-Zombie::Zombie( void )
-{
-	name = "nameless";
-}
+Zombie::Zombie( void ) : name("nameless") {}
 
-Zombie::Zombie( std::string name )
-{
-	this->name = name;
-}
+Zombie::Zombie( std::string name ) : name(name) {}
 
 Zombie::~Zombie( void )
 {
