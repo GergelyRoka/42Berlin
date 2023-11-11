@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Program.class.cpp                                  :+:      :+:    :+:   */
+/*   Program.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 01:38:56 by groka             #+#    #+#             */
-/*   Updated: 2023/11/09 01:38:57 by groka            ###   ########.fr       */
+/*   Updated: 2023/11/11 00:52:52 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Program.class.hpp"
+#include "Program.hpp"
 #include <iostream>
 
 Program::Program(void)

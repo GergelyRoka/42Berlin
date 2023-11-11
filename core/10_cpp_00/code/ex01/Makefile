@@ -5,41 +5,31 @@
 #                                                     +:+ +:+         +:+      #
 #    By: groka <groka@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/11/08 16:46:33 by groka             #+#    #+#              #
-#    Updated: 2023/11/08 16:57:16 by groka            ###   ########.fr        #
+#    Created: 2023/11/09 12:44:59 by groka             #+#    #+#              #
+#    Updated: 2023/11/11 00:56:31 by groka            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-#  |  |  ___ \    \  |         |
-#  |  |     ) |  |\/ |   _  |  |  /   _ 
-# ___ __|  __/   |   |  (   |    <    __/ 
-#    _|  _____| _|  _| \__,_| _|\_\ \___|
-#                              by jcluzet
 ################################################################################
 #                                     CONFIG                                   #
 ################################################################################
 
-NAME        := PhoneBook
-CC         := c++
-FLAGS    := -Wall -Wextra -Werror -std=c++98
- 
+NAME		:= PhoneBook
+CC			:= c++
+FLAGS		:= -Wall -Wextra -Werror -std=c++98
+INCLUDE	= -I./includes
+VPATH		= sources
+
+OBJ_DIR = objects
+OBJS = $(SRCS:%.cpp=$(OBJ_DIR)/%.o)
+
 ################################################################################
 #                                 PROGRAM'S SRCS                               #
 ################################################################################
 
-SRCS        :=      Contact.class.cpp \
-                          main.cpp \
-                          PhoneBook.class.cpp \
-                          Program.class.cpp \
-                          
-OBJS        := ${SRCS:.cpp=.o}
+GENERAL = main Contact PhoneBook Program
 
-HEADERS		:=	Contact.class.hpp \
-				PhoneBook.class.hpp \
-				Program.class.hpp \
-
-%.o: %.cpp $(HEADERS)
-	${CC} ${FLAGS} -c $< -o ${<:.cpp=.o}
+SRCS	=	$(addsuffix .cpp, $(GENERAL))\
 
 ################################################################################
 #                                  Makefile  objs                              #
@@ -52,19 +42,28 @@ GREEN		:= \033[1;32m
 YELLOW		:= \033[1;33m
 BLUE		:= \033[1;34m
 CYAN 		:= \033[1;36m
-RM		    := rm -f
+RM		    := rm -rf
 
-${NAME}:	${OBJS} ${HEADERS}
+
+
+all:		${NAME} ${SRCS}
+
+$(OBJ_DIR):
+	mkdir -p objects
+
+$(OBJ_DIR)/%.o: %.cpp
+	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE)
+
+${NAME}:	$(OBJ_DIR) $(OBJS)
 			@echo "$(GREEN)Compilation ${CLR_RMV}of ${YELLOW}$(NAME) ${CLR_RMV}..."
 			${CC} ${FLAGS} -o ${NAME} ${OBJS}
 			@echo "$(GREEN)$(NAME) created[0m ✔️"
-
-all:		${NAME} ${HEADERS}
 
 bonus:		all
 
 clean:
 			@ ${RM} *.o */*.o */*/*.o
+			@ ${RM} $(OBJ_DIR)
 			@ echo "$(RED)Deleting $(CYAN)$(NAME) $(CLR_RMV)objs ✔️"
 
 fclean:		clean
@@ -73,4 +72,7 @@ fclean:		clean
 
 re:			fclean all
 
-.PHONY:		all clean fclean re
+run:		all clean
+			./$(NAME)
+
+.PHONY:		all clean fclean re run

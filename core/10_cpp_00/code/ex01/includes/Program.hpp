@@ -1,18 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Program.class.hpp                                  :+:      :+:    :+:   */
+/*   Program.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 01:38:59 by groka             #+#    #+#             */
-/*   Updated: 2023/11/09 01:39:00 by groka            ###   ########.fr       */
+/*   Updated: 2023/11/11 00:55:54 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include "PhoneBook.class.hpp"
+#include "PhoneBook.hpp"
+
+#include <string>
+#include <iostream>
+#include <iomanip>
 
 #define START_MESSAGE "Commands: ADD, SEARCH, EXIT"
 #define WRONG_CMD_MSG "Wrong command. Try again!"

@@ -6,7 +6,7 @@
 #    By: groka <groka@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/09 12:44:59 by groka             #+#    #+#              #
-#    Updated: 2023/11/10 22:34:47 by groka            ###   ########.fr        #
+#    Updated: 2023/11/11 00:58:46 by groka            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ OBJS = $(SRCS:%.cpp=$(OBJ_DIR)/%.o)
 #                                 PROGRAM'S SRCS                               #
 ################################################################################
 
-GENERAL = main Program.class
+GENERAL = main Program
 
 SRCS	=	$(addsuffix .cpp, $(GENERAL))\
 

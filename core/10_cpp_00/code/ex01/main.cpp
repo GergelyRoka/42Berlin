@@ -6,11 +6,11 @@
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 01:38:45 by groka             #+#    #+#             */
-/*   Updated: 2023/11/09 01:38:46 by groka            ###   ########.fr       */
+/*   Updated: 2023/11/11 00:56:30 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Program.class.hpp"
+#include "Program.hpp"
 
 int main()
 {

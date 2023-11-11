@@ -1,21 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   PhoneBook.class.hpp                                :+:      :+:    :+:   */
+/*   PhoneBook.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: groka <groka@student.42berlin.de>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 01:38:53 by groka             #+#    #+#             */
-/*   Updated: 2023/11/09 01:38:53 by groka            ###   ########.fr       */
+/*   Updated: 2023/11/11 00:56:07 by groka            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once //not standard header guard but supported by the g++ compiler on linux
 
-#include "Contact.class.hpp"
+#include "Contact.hpp"
 
 #include <iostream>
 #include <iomanip>
+#include <string>
 
 #define	SIZE_OF_PHONEBOOK	8
 
