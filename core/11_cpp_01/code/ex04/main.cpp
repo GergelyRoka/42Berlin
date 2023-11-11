@@ -12,7 +12,7 @@
 
 #include <string>
 #include <iostream>
-#include "Program.class.hpp"
+#include "Program.hpp"
 
 int main(int argc, char const *argv[])
 {
