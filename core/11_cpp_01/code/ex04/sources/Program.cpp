@@ -17,17 +17,19 @@ Program::Program( std::string filename, std::string str_to_replace, std::string 
 
 Program::~Program( void ) {};
 
-int	Program::run( void ) const
+int Program::run( void ) const
 {
-	std::string		line;
+	std::string	line;
 
-	std::ifstream	file_in(_fileName);
+	std::ifstream	file_in;
+	file_in.open(_fileName.c_str());
 	if (!file_in.is_open())
 	{
 		std::cout << "ERROR: opening the file" << std::endl;
 		return (1);
 	}
-	std::ofstream	file_out(_fileName + ".replace");
+	std::ofstream	file_out;
+	file_out.open((_fileName + ".replace").c_str());
 	if (!file_out.is_open())
 	{
 		std::cout << "ERROR: opening the output file" << std::endl;
@@ -35,8 +37,8 @@ int	Program::run( void ) const
 	}
 	while (std::getline(file_in, line))
 	{
-		size_t	found = line.find(_str_to_replace);
-		std::string	new_line;
+		size_t  found = line.find(_str_to_replace);
+		std::string new_line;
 
 		if (std::string::npos == found)
 		{
