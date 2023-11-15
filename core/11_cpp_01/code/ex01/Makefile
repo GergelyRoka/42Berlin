@@ -6,7 +6,7 @@
 #    By: groka <groka@student.42berlin.de>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/09 12:46:50 by groka             #+#    #+#              #
-#    Updated: 2023/11/09 13:24:35 by groka            ###   ########.fr        #
+#    Updated: 2023/11/15 03:38:20 by groka            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,7 +53,7 @@ $(OBJ_DIR):
 	mkdir -p objects
 
 $(OBJ_DIR)/%.o: %.cpp
-	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE)
+	$(CC) $(FLAGS) -c $< -o $@ $(INCLUDE)
 
 ${NAME}:	$(OBJ_DIR) $(OBJS)
 			@echo "$(GREEN)Compilation ${CLR_RMV}of ${YELLOW}$(NAME) ${CLR_RMV}..."
